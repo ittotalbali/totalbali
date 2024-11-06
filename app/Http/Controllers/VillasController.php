@@ -91,7 +91,7 @@ class VillasController extends Controller
         $user = Auth::user();
         
         $villa = $getVillaService->execute([
-            'user_id' => $user->roles[0]->name == 'super_admin' ? null : $user->id,
+            // 'user_id' => $user->roles[0]->name == 'super_admin' ? null : $user->id,
             // 'limit' => 100 // dev only
         ])->data;
 
