@@ -92,7 +92,7 @@ class VillasController extends Controller
         
         $villa = $getVillaService->execute([
             'user_id' => $user->roles[0]->name == 'super_admin' ? null : $user->id,
-            'limit' => 100 // dev only
+            // 'limit' => 100 // dev only
         ])->data;
 
         $data["page_title"] = 'Manajemen Villa';
