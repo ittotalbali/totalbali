@@ -59,7 +59,7 @@ class FacilitiesController extends Controller
         //\
         $rules = array(
             'name' => 'required',
-            'image' => 'required|file|mimes:jpg,png',
+            // 'image' => 'required|file|mimes:jpg,png',
             'description' => 'required',
         );
         $validator = Validator::make($request->all(), $rules,  $messages = [

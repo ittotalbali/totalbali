@@ -43,6 +43,11 @@ class ServiceController extends Controller
         Request $request,
         StoreServiceService $storeServiceService
     ) {
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+        ]);
+
         $image = null;
         if($request->has('image')) {
             $image = Storage::disk('uploads')->put('service', $request->image);
