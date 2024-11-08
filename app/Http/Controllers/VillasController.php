@@ -1121,7 +1121,7 @@ class VillasController extends Controller
                     foreach ($request->galeri_album_edit as $keyEdit => $galeri) {
                         $galery = Galeri::findOrFail($keyEdit);
                         $object['title'] = $request->title_album_edit[$keyEdit];
-                        $object['order_number'] = $request->order_number[$keyEdit];
+                        $object['order_number'] = $request->order_number_edit[$keyEdit];
 
                         $galery->update($object);
                     }

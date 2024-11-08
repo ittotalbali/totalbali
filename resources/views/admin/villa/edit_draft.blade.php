@@ -1360,7 +1360,7 @@
                                                                                 rows="12">{{ $val->title }}</textarea>
                                                                         </td>
                                                                         <td>
-                                                                            <textarea name="order_number[{{ $val->id }}]"
+                                                                            <textarea name="order_number_edit[{{ $val->id }}]"
                                                                                 class="form-control" cols="30"
                                                                                 rows="12">{{ $val->order_number }}</textarea>
                                                                         </td>
