@@ -468,7 +468,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Long Description</label>
-                                    <textarea name="long" class="form-control" id="" cols="30"
+                                    <textarea name="long" class="form-control" id="editor" cols="30"
                                         rows="10">{{ $edit->long }}</textarea>
                                 </div>
                                 <div class="form-group">
@@ -2555,7 +2555,7 @@
                                                                                     </div>
                                                                                     <div class="card-body d-flex flex-column p-3">
                                                                                         <h4><a href="##"
-                                                                                            onclick="changedate('{{ $item->start_date }}')">{{ $item->details }}</a>
+                                                                                            onclick="changedate('{{ $item->start_date }}')">{!! $item->details !!}</a>
                                                                                         </h4>
                                                                                         <b>{{ ucfirst(str_replace('_', ' ', $item->type)) }}</b>
                                                                                         <div class="text-muted">
@@ -2683,9 +2683,10 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Details</label>
-                                            <input type="text" class="form-control  @error('name') is-invalid @enderror"
-                                                placeholder="Insert details" name="ratesDetails"
-                                                value="{{ @$edit_mode ? $rate->details : old('details') }}">
+                                            <textarea class="form-control  @error('name') is-invalid @enderror"
+                                                placeholder="Insert details" name="ratesDetails" id="rates-editor">
+                                                {{ @$edit_mode ? $rate->details : old('details') }}
+                                            </textarea>
                                             @error('name')
                                                 <label id="name-error" class="text-danger pl-3"
                                                     for="name">{{ $message }}</label>
@@ -4680,6 +4681,7 @@
         let rateId = null;
 
         fetchCurrency();
+        initRatesEditor();
 
         $('#openFormRatesAdd').on('click', () => {
             emptyRatesModal();
@@ -4758,7 +4760,7 @@
         const villaId = document.querySelector('input[name="villaId"]').value;
 
         const type = document.querySelector('select[name="ratesType"]').value;
-        const details = document.querySelector('input[name="ratesDetails"]').value;
+        const details = CKEDITOR.instances['rates-editor'].getData();
         const startDate = document.querySelector('input[name="start_date"]').value;
         const endDate = document.querySelector('input[name="end_date"]').value;
 
@@ -4803,12 +4805,11 @@
     function editRates(res) {
         $('#openFormRatesAdd').click();
 
-        let ratesDetails = document.querySelector('input[name="ratesDetails"]');
         let ratesType = document.querySelector('select[name="ratesType"]');
         let startDate = document.querySelector('input[name="start_date"]');
         let endDate = document.querySelector('input[name="end_date"]');
 
-        ratesDetails.value = res.details;
+        CKEDITOR.instances['rates-editor'].setData(res.details);
         ratesType.value = res.type;
         startDate.value = res.start_date;
         endDate.value = res.end_date;
@@ -4835,7 +4836,7 @@
     }
 
     function emptyRatesModal() {
-        document.querySelector('input[name="ratesDetails"]').value = '';
+        CKEDITOR.instances['rates-editor'].setData('');
         document.querySelector('select[name="ratesType"]').options[0].selected = true;
         document.querySelector('input[name="start_date"]').value = '';
         document.querySelector('input[name="end_date"]').value = '';
@@ -4850,6 +4851,16 @@
         document.querySelector('input[name="room"]').value = '';
         document.querySelector('select[name="currency"]').options[0].selected = true;
         document.querySelector('input[name="price"]').value = '';
+    }
+
+    function initRatesEditor() {
+        CKEDITOR.replace('rates-editor', {
+            toolbar: 'MyToolbar',
+            width: "100%",
+            filebrowserBrowseUrl: "{{ asset('ckfinder/ckfinder.html') }}",
+            filebrowserImageBrowseUrl: "{{ asset('ckfinder/ckfinder.html?type=Images') }}",
+            filebrowserFlashBrowseUrl: "{{ asset('ckfinder/ckfinder.html?type=Flash') }}",
+        });
     }
 </script>
 {{-- CLOSE ADD ROOMS --}}

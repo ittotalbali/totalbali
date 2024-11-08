@@ -420,7 +420,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Long Description</label>
-                                    <textarea name="long" id="longDesc" class="form-control" id="" cols="30" rows="10"></textarea>
+                                    <textarea name="long" id="editor" class="form-control" cols="30" rows="10"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>Old Link</label>
