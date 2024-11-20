@@ -15,12 +15,14 @@ class RatesMappingService implements BaseService
         if($rates) {
             $data = $rates->map(function($item) {
                 return [
+                    'id' => $item->id, 
                     'details' => $item->details,
                     'type' => $item->type,
                     'start_date' => $item->start_date,
                     'end_date' => $item->end_date,
-                    'rooms' => collect($item->rooms)->map(function($room) {
+                    'rooms' => collect($item->rooms)->map(function($room) use($item) {
                         return [
+                            'rates_id' => $item->id,
                             'total_bedroom' => $room['total_bedroom'],
                             'currency' => !empty($room['currency']) ? $room['currency'] : null,
                             'price' => $room['price'],
