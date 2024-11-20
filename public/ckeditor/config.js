@@ -27,4 +27,7 @@
 	{ name: 'tools', items : [ 'Maximize', 'ShowBlocks','-','About' ] }
 	
 	];
+
+	// Remove image plugin
+	config.removePlugins = 'image';
 };

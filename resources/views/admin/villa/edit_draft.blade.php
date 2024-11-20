@@ -4836,7 +4836,6 @@
     }
 
     function emptyRatesModal() {
-        CKEDITOR.instances['rates-editor'].setData('');
         document.querySelector('select[name="ratesType"]').options[0].selected = true;
         document.querySelector('input[name="start_date"]').value = '';
         document.querySelector('input[name="end_date"]').value = '';
@@ -4851,6 +4850,10 @@
         document.querySelector('input[name="room"]').value = '';
         document.querySelector('select[name="currency"]').options[0].selected = true;
         document.querySelector('input[name="price"]').value = '';
+
+        $('#formRatesAdd').on('hidden.bs.modal', () => {
+            CKEDITOR.instances['rates-editor'].setData('');
+        });
     }
 
     function initRatesEditor() {

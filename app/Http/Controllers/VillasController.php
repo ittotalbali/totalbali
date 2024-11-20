@@ -897,7 +897,7 @@ class VillasController extends Controller
         }
 
         // Generate villa code
-        if(empty($request->code) and !empty($request->sub_location_id)) {
+        if(!empty($request->sub_location_id)) { // used empty($request->code) filter before
             $bedroom = $request->bedroom ?? 0;
             $bathroom = $request->bathroom ?? 0;
 
@@ -906,20 +906,21 @@ class VillasController extends Controller
             $formatted_villa_count = str_pad($sub_location_villa_count, 3, '0', STR_PAD_LEFT);
 
             $code = $sub_location->name . '-' . $bedroom . $bathroom . $formatted_villa_count;
-        }else {
-            $bedroom = $request->bedroom ?? 0;
-            $bathroom = $request->bathroom ?? 0;
-            $code = $request->code;
-
-            $last_3_digits = substr($code, -3);
-            $current_sub_location = explode('-', $code)[0];
-            $code = $current_sub_location . '-' . $bedroom . $bathroom . $last_3_digits;
-
-            if(!empty($request->sub_location_id)) {
-                $sub_location = SubLocation::find($request->sub_location_id);
-                $code = str_replace($current_sub_location, $sub_location->name, $code);
-            }
         }
+        // else {
+        //     $bedroom = $request->bedroom ?? 0;
+        //     $bathroom = $request->bathroom ?? 0;
+        //     $code = $request->code;
+
+        //     $last_3_digits = substr($code, -3);
+        //     $current_sub_location = explode('-', $code)[0];
+        //     $code = $current_sub_location . '-' . $bedroom . $bathroom . $last_3_digits;
+
+        //     if(!empty($request->sub_location_id)) {
+        //         $sub_location = SubLocation::find($request->sub_location_id);
+        //         $code = str_replace($current_sub_location, $sub_location->name, $code);
+        //     }
+        // }
 
         $object = array(
             'name' => $request->name,
@@ -1111,7 +1112,7 @@ class VillasController extends Controller
                             $image = Storage::disk('uploads')->put('galeri_album', $image);
                             $object['image'] = $image;
                             $object['title'] = $request->title_album_edit[$keyEdit];
-                            $object['order_number'] = $request->order_number[$keyEdit];
+                            $object['order_number'] = $request->order_number_edit[$keyEdit];
 
                             $galery->update($object);
                         }
