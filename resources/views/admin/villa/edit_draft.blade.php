@@ -2935,7 +2935,7 @@
 
 
     <div class="modal fade" id="modal-add-ical" tabindex="-1" role="dialog" aria-labelledby="modalEditTitle"
-        aria-hidden="true">
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <form method="POST" action="" class="card-body" id="formIcalAdd" enctype="multipart/form-data">
                 <div class="modal-content">
@@ -2948,6 +2948,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
+                            <label>Link Ical</label>
+                            <input type="text" class="form-control mb-3" name="ical_link" id="ical-link">
                             <label>File Ical</label>
                             <input type="file" class="use-dropify  @error('ical') is-invalid @enderror"
                                 placeholder="Insert your name" name="ical">

@@ -17,11 +17,22 @@ class CalendarController extends Controller
     public function import(Request $request, $id)
     {
         // dd($id);
-        $rules = array(
-            'ical' => 'required',
-        );
-        $file = $request->file('ical');
-        $url = $request->link;
+        // $rules = array(
+        //     'ical' => 'required',
+        // );
+
+        if(!empty($request->ical_link)) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_URL, $request->ical_link);
+            
+            $file = curl_exec($ch);
+
+            curl_close($ch);
+        }else {
+            $file = $request->file('ical');
+        }
+        // $url = $request->link;
         // Open the file for reading
         // $url = "https://www.example.com/downloadable_file.pdf"; // Replace with your URL
 
