@@ -2907,7 +2907,7 @@
                     <button class="btn btn-primary">Tambah</button>
                 </a> --}}
                 <button type="button" class="btn btn-primary add-ical" data-target="#formIcalAdd"
-                    data-action-ical="{{ route('admin.calendar.import', $edit->id) }}" data-toggle="modal">Tambah</button>
+                    data-action-ical="{{ route('admin.calendar.import', $edit->id) }}" data-toggle="modal">Import Ical</button>
             @endcan
         </div>
     </div>
@@ -2948,6 +2948,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
+                            <label>Current Link Ical</label>
+                            <textarea class="form-control mb-3" rows="5" disabled>{{ $edit->link_ical ?? 'N/A' }}</textarea>
                             <label>Link Ical</label>
                             <input type="text" class="form-control mb-3" name="ical_link" id="ical-link">
                             <label>File Ical</label>
