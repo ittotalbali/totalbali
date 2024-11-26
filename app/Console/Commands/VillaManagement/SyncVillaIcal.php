@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\VillaManagement;
 
-use App\Models\Villas;
+use App\Services\VillaManagement\Villa\Sync\SyncVillaIcalService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -42,13 +42,7 @@ class SyncVillaIcal extends Command
         try {
             DB::beginTransaction();
 
-            $villas = Villas::all();
-
-            foreach($villas as $villa) {
-                $villa->update([
-                    "status" => 'post'
-                ]);
-            }
+            (new SyncVillaIcalService)->execute();
 
             DB::commit();
         }catch(\Exception $ex) {

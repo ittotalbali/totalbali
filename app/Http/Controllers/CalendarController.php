@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Calender;
+use App\Models\Villas;
 use DB;
 
 class CalendarController extends Controller
@@ -26,11 +27,12 @@ class CalendarController extends Controller
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_URL, $request->ical_link);
             
-            $file = curl_exec($ch);
+            $fileContents = curl_exec($ch);
 
             curl_close($ch);
         }else {
             $file = $request->file('ical');
+            $fileContents = file_get_contents($file);
         }
         // $url = $request->link;
         // Open the file for reading
@@ -41,9 +43,13 @@ class CalendarController extends Controller
         // } else {
         //     dd('The URL may not point to a downloadable file, or an error occurred.');
         // }
+
+        if(empty($fileContents)) {
+            return redirect()->route('admin.villa.edit', ['id' => $id])
+                ->with(['notif_status' => '0', 'notif' => 'Import data ical failed. Please check your ical file/link.']);
+        }
         
         try {
-            $fileContents = file_get_contents($file);
             $cek = preg_split("/\n|\r\n/", $fileContents);
             $search = array_search("BEGIN:VEVENT",$cek,true);
             for ($i=1; $i < $search ; $i++) { 
@@ -82,6 +88,11 @@ class CalendarController extends Controller
             $newPhrase = str_replace($text, $array, $data);
             $json = json_decode($newPhrase);
 
+            if(empty($json)) {
+                return redirect()->route('admin.villa.edit', ['id' => $id])
+                    ->with(['notif_status' => '0', 'notif' => 'Import data ical failed. Please check your ical file/link.']);
+            }
+
             // return $json;
             foreach ($json as $key => $value) {
                 $explode1 = explode(',',$value->text);
@@ -117,10 +128,18 @@ class CalendarController extends Controller
             // return $result;
             DB::table('calenders')->where('villa_id', $id)->delete();
             Calender::insert($result);
+
+            if(!empty($request->ical_link)) {
+                $villa = Villas::find($id);
+                $villa->update([
+                    'link_ical' => $request->ical_link
+                ]);
+            }
+
             return redirect()->route('admin.villa.edit', ['id' => $id])
                 ->with(['notif_status' => '1', 'notif' => 'Import data ical succeed.']);
         } catch (\Exception $e) {
-            dd($e);
+            throw $e;
         }
        
         
