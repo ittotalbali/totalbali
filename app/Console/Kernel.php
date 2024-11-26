@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('villa:sync_villa_ical')->everyFiveMinutes();
+        $schedule->command('villa:sync_villa_ical')->everySixHours();
     }
 
     /**
