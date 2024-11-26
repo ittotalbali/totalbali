@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\VillaManagement;
 
 use App\Models\Villas;
 use Illuminate\Console\Command;
