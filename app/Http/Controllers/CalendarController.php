@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Calender;
 use App\Models\Villas;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class CalendarController extends Controller
 {
@@ -133,6 +133,11 @@ class CalendarController extends Controller
                 $villa = Villas::find($id);
                 $villa->update([
                     'link_ical' => $request->ical_link
+                ]);
+            }else {
+                $villa = Villas::find($id);
+                $villa->update([
+                    'link_ical' => null
                 ]);
             }
 

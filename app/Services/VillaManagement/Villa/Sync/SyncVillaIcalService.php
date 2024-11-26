@@ -9,7 +9,7 @@ class SyncVillaIcalService implements BaseService
 {
     public function execute(array $dto = []): object
     {
-        $villas = Villas::where('status', 'post')
+        $villas = Villas::where('status', 'draft')
         ->whereNotNull('link_ical')
         ->get();
 
