@@ -41,6 +41,8 @@ class SyncVillaIcal extends Command
     public function handle()
     {
         try {
+            $this->info('Villa synchronization started...');
+
             DB::beginTransaction();
 
             $villas = Villas::where('status', 'post')
@@ -54,8 +56,12 @@ class SyncVillaIcal extends Command
             }
 
             DB::commit();
+
+            $this->info('Villa synchronization completed...');
         }catch(\Exception $ex) {
             DB::rollBack();
+
+            $this->error('Villa synchronization failed: ' . $ex->getMessage());
         }
     }
 }
