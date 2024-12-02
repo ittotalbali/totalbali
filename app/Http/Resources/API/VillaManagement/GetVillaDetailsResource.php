@@ -162,6 +162,7 @@ class GetVillaDetailsResource extends JsonResource
                 'sub_location_id' => $this->sub_location_id,
                 'type_accommodation' => $this->type_accomodation,
                 'rates' => $this->rate,
+                'total_bedroom' => $this->bedroom
             ])->data,
             'nearby_villa' => (new NearbyVillaMappingService)->execute([
                 'villa_id' => $this->id,
