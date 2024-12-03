@@ -130,9 +130,11 @@ class GetVillaService implements BaseService
             $villa->whereHas('wedding', function($q) use ($dto) {
                 if(!empty($dto['wedding_villa']['params'])) {
                     foreach($dto['wedding_villa']['params'] as $key => $value) {
-                        if($key == 'standing_guests' or $key == 'seated_guests') {
-                            $q->where($key, $value);
-                        }else if($key == 'ocean_views') {
+                        if(
+                            $key == 'standing_guests' or
+                            $key == 'seated_guests' or
+                            $key == 'ocean_views'
+                        ) {
                             $q->where($key, $value);
                         }else {
                             $q->where($value, '!=', null);
