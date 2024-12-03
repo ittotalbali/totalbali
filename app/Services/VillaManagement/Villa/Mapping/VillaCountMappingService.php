@@ -33,12 +33,19 @@ class VillaCountMappingService implements BaseService
                 ];
             })->all();
 
+            if(empty($bedrooms)) {
+                $bedrooms[] = [
+                    'total_bedroom' => $dto['total_bedroom'],
+                    'villa_count' => (new CalculateVillaOnRateTotalBedroomService)->execute($dto)->data
+                ];
+            }
+
             $data = [
                 'area' => (new CalculateVillaOnAreaService)->execute($dto)->data,
                 'location' => (new CalculateVillaOnLocationService)->execute($dto)->data,
                 'sub_location' => (new CalculateVillaOnSubLocationService)->execute($dto)->data,
                 'type_of_accommodation' => (new CalculateVillaOnTypeAccommodationService)->execute($dto)->data,
-                'bedrooms' => empty($bedrooms) ? $dto['total_bedroom'] : $bedrooms,
+                'bedrooms' => $bedrooms
             ];
         }
 
