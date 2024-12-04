@@ -34,7 +34,8 @@ class VillaAPIController extends Controller
             'success' => true,
             'data' => $data,
             'message' => 'Villa retrieved successfully',
-            'pagination' => $result->pagination ?? null
+            'pagination' => $result->pagination ?? null,
+            'request' => $request->all(),
         ]);
     }
 
