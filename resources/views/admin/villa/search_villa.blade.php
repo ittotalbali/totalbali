@@ -145,7 +145,6 @@
                                 <th>No</th>
                                 <th>Nama villa</th>
                                 <th>Code villa</th>
-                                <th>Inclusions</th>
                                 <th>Location</th>
                                 <th>Sub location</th>
                                 <th>Bedrooms</th>
@@ -172,15 +171,7 @@
                                     @else
                                     <td>N/A</td>
                                     @endif
-                                    <td class="text-wrap">
-                                        @if ($item->facilities->count() > 0)  
-                                            @foreach ($item->facilities as $i => $inc)
-                                            {{ ($item->facilities->count() == $i+1) ? $inc->name : $inc->name.','  }}
-                                            @endforeach
-                                        @else
-                                            N/A
-                                        @endif
-                                    </td>
+                                  
                                     <td>{{ $item->location->name ?? 'N/A' }}</td>
                                     <td>{{ $item->sublocation->name ?? 'N/A' }}</td> 
                                     <td>{{ $item->bedroom }}</td>

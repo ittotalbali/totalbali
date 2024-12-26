@@ -16,10 +16,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('currency')->group(function () {
     Route::controller(CurrencyController::class)->group(function () {
-        Route::get('/', 'index')->name('currency.index');
+        Route::get('/index', 'index')->name('currency.index');
         Route::get('get', 'get')->name('currency.get');
         Route::post('store', 'store')->name('currency.store');
         Route::post('update', 'update')->name('currency.update');
         Route::post('delete', 'delete')->name('currency.delete');
+        Route::get('/kurs', 'kurs')->name('currency.kurs');
+
     });
 });

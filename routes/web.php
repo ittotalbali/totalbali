@@ -114,6 +114,10 @@ Route::group(['middleware' => ['auth']], function () {
             Route::put('/update/{id}', [VillasController::class, 'update'])->name('villa.update');
             Route::delete('/destroy/{id}', [VillasController::class, 'destroy'])->name('villa.destroy');
         });
+        //rino
+        Route::get('/genrate', [VillasController::class, 'genrate'])->name('villa.generate');
+        //endrino
+        
         Route::get('villa-by-location', [VillasController::class, 'villa_by_location'])->name('villa.villa-by-location');
         Route::get('search', [VillasController::class, 'search_villa'])->name('villa.search');
         Route::get('{id}/detail', [VillasController::class, 'show'])->name('villa.detail');

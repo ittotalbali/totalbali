@@ -1250,11 +1250,6 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="form-group">
-                                                    <label>Nama Album</label>
-                                                    <input type="text" name="nama_album[]" id="nama_album"
-                                                        class="form-control">
-                                                </div>
-                                                <div class="form-group">
                                                     <label>Kategori Album</label>
                                                     <select name="album_category[]" id="album-category"
                                                         class="form-select @error('album_category') is-invalid @enderror">
@@ -1265,6 +1260,18 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label>Nama Album</label>
+                                                      <select name="nama_album[]" id="nama_album" class="form-control">
+                                                            <option value="other">Other</option>
+                                                            @for ($i = 1; $i <= 20; $i++)
+                                                                <option value="{{ $i }}">Bedroom {{ $i }}</option>
+                                                            @endfor
+                                                        </select>
+                                                    <!--<input type="text" name="nama_album[]" id="nama_album"-->
+                                                    <!--    class="form-control">-->
+                                                </div>
+                                                
                                                 <input type="hidden" name="count_album" id="count_album"
                                                     value="0">
                                                 <div class="form-group">
@@ -2537,13 +2544,8 @@
                             <div class="card-body">
                                     <div class="container">
                                         <button class="btn btn-danger btn-right del-album-${i}" onclick="delete_album(${i})" type="button"><i class="fa fa-trash pr-2"></i>Delete</button>
-                                    </div>                                    
+                                    </div>              
                                     <div class="form-group">
-                                <label>Nama Album</label>
-                                                <input type="text" name="nama_album[${i}]" id="nama_album" class="form-control">
-                                                </div>
-                                            
-                                                <div class="form-group">
                                                     <label>Kategori Album</label>
                                                     <select name="album_category[${i}]" id="album-category"
                                                         class="form-select @error('album_category') is-invalid @enderror">
@@ -2554,7 +2556,17 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-
+                                    <div class="form-group">
+                                <label>Nama Album</label>
+                                  <select name="nama_album[${i}]" id="nama_album" class="form-control">
+                                                               <option value="other" {{ $item->nama == 'other' ? 'selected' : '' }}>Other</option>
+                                                               @for ($i = 1; $i <= 20; $i++)
+                                                                    <option value="{{ $i }}" {{ $item->nama == (string)$i ? 'selected' : '' }}>Bedroom {{ $i }}</option>
+                                                                @endfor
+                                                            </select>
+                                                // <input type="text" name="nama_album[${i}]" id="nama_album" class="form-control">
+                                                </div>
+                                            
                                                 <div class="form-group">
                                                     <label>Deskripsi Album</label>
                                                     <textarea name="deskripsi_album[${i}]" id="deskripsi_album" class="form-control" cols="30" rows="4"></textarea>

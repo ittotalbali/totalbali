@@ -1305,11 +1305,6 @@
                                                         data-link="{{ route('admin.villa.destroy_album', ['id' => $item->id]) }}">Delete
                                                     </button>
                                                     <div class="form-group">
-                                                        <label>Nama Album</label>
-                                                        <input type="text" name="nama_album_edit[{{ $item->id }}]"
-                                                            id="nama_album" value="{{$item->nama}}" class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
                                                         <label>Kategori Album</label>
                                                         <select name="album_category[{{ $item->id }}]" id="album-category"
                                                             class="form-select @error('album_category') is-invalid @enderror">
@@ -1324,6 +1319,18 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label>Nama Album</label>
+                                                        <!--<input type="text" name="nama_album_edit[{{ $item->id }}]"-->
+                                                        <!--    id="nama_album" value="{{$item->nama}}" class="form-control">-->
+                                                              <select name="nama_album_edit[{{ $item->id }}]" id="nama_album" class="form-control">
+                                                               <option value="other" {{ $item->nama == 'other' ? 'selected' : '' }}>Other</option>
+                                                               @for ($i = 1; $i <= 20; $i++)
+                                                                    <option value="{{ $i }}" {{ $item->nama == (string)$i ? 'selected' : '' }}>Bedroom {{ $i }}</option>
+                                                                @endfor
+                                                            </select>
+                                                    </div>
+                                                    
                                                     <input type="hidden" name="count_album" id="count_album" value="0">
                                                     <div class="form-group">
                                                         <label>Deskripsi Album</label>
@@ -1390,11 +1397,6 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="form-group">
-                                                    <label>Nama Album</label>
-                                                    <input type="text" name="nama_album[]" id="nama_album"
-                                                        class="form-control">
-                                                </div>
-                                                <div class="form-group">
                                                     <label>Kategori Album</label>
                                                     <select name="album_category[]" id="album-category"
                                                         class="form-select @error('album_category') is-invalid @enderror">
@@ -1405,6 +1407,18 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label>Nama Album</label>
+                                                    <!--<input type="text" name="nama_album[]" id="nama_album"-->
+                                                    <!--    class="form-control">-->
+                                                         <select name="nama_album[]" id="nama_album" class="form-control">
+                                                            <option value="other">Other</option>
+                                                            @for ($i = 1; $i <= 20; $i++)
+                                                                <option value="{{ $i }}">Bedroom {{ $i }}</option>
+                                                            @endfor
+                                                        </select>
+                                                </div>
+                                                
                                                 <input type="hidden" name="count_album" id="count_album"
                                                     value="0">
                                                 <div class="form-group">
@@ -1606,10 +1620,11 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <!--ell total-->
                                         <label>Monthly Description</label>
                                         <textarea name="monthly_description_edit" id="monthly_description"
                                             class="form-control" cols="30"
-                                            rows="4">{{ $edit->pricing->monthly_description }}</textarea>
+                                            rows="10">{{ $edit->pricing->monthly_description }}</textarea>
                                     </div>
 
                                     <div class="form-group row pt-0">
@@ -2554,9 +2569,9 @@
                                                                                     <div class="card-status card-status-left {{ $bg }} br-bl-7 br-tl-7">
                                                                                     </div>
                                                                                     <div class="card-body d-flex flex-column p-3">
-                                                                                        <h4><a href="##"
+                                                                                        <p><a href="##"
                                                                                             onclick="changedate('{{ $item->start_date }}')">{!! $item->details !!}</a>
-                                                                                        </h4>
+                                                                                        </p>
                                                                                         <b>{{ ucfirst(str_replace('_', ' ', $item->type)) }}</b>
                                                                                         <div class="text-muted">
                                                                                             <b>Start</b> =
@@ -2671,6 +2686,7 @@
                                                     <option value="peak_season"{{ $rate->type == 'peak_season' ? 'selected' : '' }}>Peak season
                                                     <option value="shoulder_season"{{ $rate->type == 'shoulder_season' ? 'selected' : '' }}>Shoulder season
                                                     <option value="special_rate"{{ $rate->type == 'special_rate' ? 'selected' : '' }}>Special rate
+                                                    <option value="sales"{{ $rate->type == 'sales' ? 'selected' : '' }}>Sales
                                                 @else
                                                     <option value="base_season">Base season
                                                     <option value="low_season">Low season
@@ -2678,6 +2694,7 @@
                                                     <option value="peak_season">Peak season
                                                     <option value="shoulder_season">Shoulder season
                                                     <option value="special_rate">Special rate
+                                                    <option value="sales">Sales
                                                 @endif
                                             </select>
                                         </div>
@@ -4045,13 +4062,8 @@
                             <div class="card-body">
                                     <div class="container">
                                         <button class="btn btn-danger btn-right del-album-${i}" onclick="delete_album(${i})" type="button"><i class="fa fa-trash pr-2"></i>Delete</button>
-                                    </div>                                    
+                                    </div>    
                                     <div class="form-group">
-                                <label>Nama Album</label>
-                                                <input type="text" name="nama_album[${i}]" id="nama_album" class="form-control">
-                                                </div>
-
-                                                <div class="form-group">
                                                     <label>Kategori Album</label>
                                                     <select name="album_category[${i}]" id="album-category"
                                                         class="form-select @error('album_category') is-invalid @enderror">
@@ -4062,6 +4074,19 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
+                                    <div class="form-group">
+                                <label>Nama Album</label>
+                                                
+                                              <select name="nama_album[${i}]" id="nama_album_${i}" class="form-control">
+        <option value="" disabled selected>Pilih Nama Album</option>
+        <option value="other">Other</option>
+        @for ($j = 1; $j <= 20; $j++)
+            <option value="{{ $j }}">Bedroom {{ $j }}</option>
+        @endfor
+    </select>
+                                                </div>
+
+                                                
                                             
                                                 <div class="form-group">
                                                     <label>Deskripsi Album</label>
@@ -4869,6 +4894,12 @@
             filebrowserFlashBrowseUrl: "{{ asset('ckfinder/ckfinder.html?type=Flash') }}",
         });
     }
+</script>
+<script>
+    CKEDITOR.replace('monthly_description');
+    CKEDITOR.replace('yearly_description');
+    CKEDITOR.replace('available_for_sales_description');
+    CKEDITOR.replace('information');
 </script>
 {{-- CLOSE ADD ROOMS --}}
 @endsection

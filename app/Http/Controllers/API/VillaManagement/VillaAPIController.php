@@ -30,11 +30,23 @@ class VillaAPIController extends Controller
         $data = isset($result->data->id) ? new GetVillaResource($result->data) :
         GetVillaResource::collection($result->data);
 
-        return response()->json([
+        $response = response()->json([
             'success' => true,
             'data' => $data,
             'message' => 'Villa retrieved successfully',
-            'pagination' => $result->pagination ?? null,
+        ]);
+
+        $data = $response->getData();
+
+        $dataArray = json_decode(json_encode($data), true);
+
+        $conversion_data = $getVillaService->printArr($request->all(), $dataArray);
+
+        return response()->json([
+            'success' => true,
+            'data' => $conversion_data,
+            'message' => 'Villa retrieved successfully',
+            'pagination' => $result->pagination ?? null
         ]);
     }
 
@@ -68,9 +80,25 @@ class VillaAPIController extends Controller
         $data = isset($result->data->id) ? new GetVillaDetailsResource($result->data) :
         GetVillaDetailsResource::collection($result->data);
 
-        return response()->json([
+        $response = response()->json([
             'success' => true,
             'data' => $data,
+            'message' => 'Villa retrieved successfully',
+        ]);
+        
+        // Get the JSON data as an array or object
+        $data = $response->getData(); // This will return the data as an stdClass object
+        
+        // You can also convert it to an array if you prefer
+        // $arrayData = (array) $data; // Convert to an array if needed
+        
+        $dataArray = json_decode(json_encode($data), true);
+
+        $conversion_data = $getVillaService->print($request->all(), $dataArray);
+
+        return response()->json([
+            'success' => true,
+            'data' => $conversion_data,
             'message' => 'Villa retrieved successfully',
         ]);
     }
