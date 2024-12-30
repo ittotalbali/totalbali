@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\API\VillaManagement;
 
+use App\Services\VillaManagement\Villa\Mapping\WeddingsVillaMappingService;
 use App\Services\VillaManagement\Villa\Mapping\AlbumsMappingService;
 use App\Services\VillaManagement\Villa\Mapping\GaleriesMappingService;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -35,6 +36,7 @@ class GetVillaResource extends JsonResource
             'latitude' => $this->cor_lat,
             'longitude' => $this->cor_long,
             'map_url' => $this->link_map,
+            'wedding_villa' => $data['wedding_villa'],
             'galeries' => $data['galeries'],
             'albums' => $data['albums'],
         ];
@@ -47,6 +49,9 @@ class GetVillaResource extends JsonResource
             ])->data,
             'albums' => (new AlbumsMappingService)->execute([
                 'albums' => $this->album
+            ])->data,
+            'wedding_villa' => (new WeddingsVillaMappingService)->execute([
+                'wedding' => $this->wedding
             ])->data,
         ];
     }

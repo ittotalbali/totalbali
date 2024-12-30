@@ -33,6 +33,14 @@
                     <span class="link-title">Management Villa</span>
                 </a>
             </li>
+            
+            <li class="nav-item {{ Route::is('admin.villa.genrate') ? 'active' : '' }}">
+                <a href="{{ route('admin.villa.generate') }}" class="nav-link">
+                    <i class="fas fa-clone"></i>
+                    <span class="link-title" style="margin-left:15px;">Generate Rates</span>
+                </a>
+            </li>
+            
             {{-- <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#villa" role="button"
                     aria-expanded="{{ Route::is('admin.villas.*') ? 'true' : 'false' }}"
@@ -112,12 +120,28 @@
                     </a>
                 </li>
             @endcan --}}
-            <li class="nav-item {{ Route::is('admin.currency.*') ? 'active' : '' }}">
+            
+            
+            <!--start rino-->
+            <?php
+            $activeMenu = Request::segment(2);
+            $activeMenux = Request::segment(3);
+            ?>
+            <li class="nav-item <?php if ($activeMenu == 'currency' && $activeMenux == '') { echo 'active'; } ?>">
                 <a href="{{ route('admin.currency.index') }}" class="nav-link">
                     <i class="link-icon" data-feather="dollar-sign"></i>
                     <span class="link-title">Currency</span>
                 </a>
             </li>
+            <li class="nav-item <?php if ($activeMenu == 'currency' && $activeMenux == 'kurs') { echo 'active'; } ?>">
+                <a href="{{ route('admin.currency.kurs') }}" class="nav-link">
+                    <i class="link-icon" data-feather="dollar-sign"></i>
+                    <span class="link-title">Currency Conversion</span>
+                </a>
+            </li>
+<!--end rino-->
+
+
             <li class="nav-item {{ Route::is('admin.album-category.*') ? 'active' : '' }}">
                 <a href="{{ route('admin.album-category.index') }}" class="nav-link">
                     <i class="link-icon" data-feather="image"></i>

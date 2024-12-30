@@ -46,7 +46,7 @@ class CalendarController extends Controller
 
         if(empty($fileContents)) {
             return redirect()->route('admin.villa.edit', ['id' => $id])
-                ->with(['notif_status' => '0', 'notif' => 'Import data ical failed. Please check your ical file/link.']);
+                ->with(['notif_status' => '0', 'notif' => 'Import failed because empty. link successfully updated!']);
         }
         
         try {
@@ -89,8 +89,11 @@ class CalendarController extends Controller
             $json = json_decode($newPhrase);
 
             if(empty($json)) {
+                if (!empty($request->ical_link)) {
+                Villas::find($id)->update(['link_ical' => $request->ical_link]);
+            }
                 return redirect()->route('admin.villa.edit', ['id' => $id])
-                    ->with(['notif_status' => '0', 'notif' => 'Import data ical failed. Please check your ical file/link.']);
+                    ->with(['notif_status' => '0', 'notif' => 'Import failed because empty. link successfully updated!']);
             }
 
             // return $json;
@@ -137,7 +140,7 @@ class CalendarController extends Controller
             }else {
                 $villa = Villas::find($id);
                 $villa->update([
-                    'link_ical' => null
+                    'link_ical' => $request->ical_link
                 ]);
             }
 

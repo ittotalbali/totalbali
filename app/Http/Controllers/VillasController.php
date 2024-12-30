@@ -100,6 +100,19 @@ class VillasController extends Controller
 
         return view('admin.villa.index', $data);
     }
+    
+     //rino
+    public function genrate(GetVillaService $getVillaService)
+    {        
+        $villa = $getVillaService->execute()->data;
+        $rate = Rates::all();
+        $data["page_title"] = 'Manajemen Villa';
+        $data['villa'] = $villa;
+        $data['rate'] = $rate;
+
+        return view('admin.villa.generate', $data);
+    }
+    //endrino
 
     public function draft_villa()
     {
@@ -530,8 +543,8 @@ class VillasController extends Controller
             'sort_type' => 'asc'
         ])->data;
         $data['album_categories'] = $getAlbumCategoryService->execute([
-            'sort_by' => 'name',
-            'sort_type' => 'asc'
+            'sort_by' => 'id',
+            'sort_type' => 'desc'
         ])->data;
 
         $data['year_list'] = range(date('Y'), 2100);
@@ -831,8 +844,8 @@ class VillasController extends Controller
             'sort_type' => 'asc'
         ])->data;
         $data['album_categories'] = $getAlbumCategoryService->execute([
-            'sort_by' => 'name',
-            'sort_type' => 'asc'
+            'sort_by' => 'id',
+            'sort_type' => 'desc'
         ])->data;
 
         $data['service_villa'] = $villa->services->pluck('id')->toArray();
@@ -961,6 +974,7 @@ class VillasController extends Controller
             'cor_lat' => $request->cor_lat,
             'cor_long' => $request->cor_long,
             'status' => $statusPost,
+            // 'link_ical' => $request->link_ical,
         );
 
         $villa = Villas::findOrFail($id);
@@ -2111,9 +2125,9 @@ class VillasController extends Controller
         //                         ->get();
         // }
         // dd($villas->toArray());
-        $request->merge([
-            'status' => 'post'
-        ]);
+        // $request->merge([
+        //     'status' => 'post'
+        // ]);
         
         $villas = $getVillaService->execute($request->all())->data;
 
