@@ -36,7 +36,6 @@ class FamilyVillaMappingService implements BaseService
                 'included' => $family->included,
                 'included_currency' => $family->included_currency,
                 'image_url' => !empty($family->photos) ? asset('uploads/'. $family->photos) : null,
-                'kids_toys' => $family->kids_toys,
             ];
         }
 

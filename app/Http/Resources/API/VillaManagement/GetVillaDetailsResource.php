@@ -20,7 +20,6 @@ use App\Services\VillaManagement\Villa\Mapping\RoomAvailabilityMappingService;
 use App\Services\VillaManagement\Villa\Mapping\ServicesMappingService;
 use App\Services\VillaManagement\Villa\Mapping\StaffAtVillaMappingService;
 use App\Services\VillaManagement\Villa\Mapping\VillaCountMappingService;
-use App\Services\VillaManagement\Villa\Mapping\VillaIncludeMappingService;
 use App\Services\VillaManagement\Villa\Mapping\WeddingVillaMappingService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -81,6 +80,7 @@ class GetVillaDetailsResource extends JsonResource
             'family_villa' => $data['family_villa'],
             'nearby_club' => $data['nearby_club'],
             'nearby_villa' => $data['nearby_villa'],
+            'beach_villa' => $data['beach_villa'],
         ];
     }
 
@@ -168,6 +168,9 @@ class GetVillaDetailsResource extends JsonResource
             'nearby_villa' => (new NearbyVillaMappingService)->execute([
                 'villa_id' => $this->id,
                 'location_id' => $this->location_id
+            ])->data,
+            'beach_villa' => (new BeachVillaMappingService)->execute([
+                'beach' => $this->beach
             ])->data,
         ];
     }
