@@ -2262,6 +2262,7 @@ class VillasController extends Controller
             'waves_nearby' => $request->waves_nearby,
             'extra_information' => $request->extra_information,
             'other_information' => $request->other_information,
+            'beachfront' => $request->beachfront,
         );
 
 
