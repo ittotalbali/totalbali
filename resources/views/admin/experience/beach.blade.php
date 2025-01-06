@@ -86,6 +86,18 @@
                                 <label id="other_information-error" class="text-danger pl-3" for="other_information">{{ $message }}</label>
                             @enderror
                         </div>
+
+                        <div class="form-group">
+                            <label>Beachfront</label>
+                            <select name="beachfront" class="form-select @error('beachfront') is-invalid @enderror">
+                                <option value="">-- Choose Beachfront --</option>
+                                <option value="yes" {{ @$edit_mode && $villa->beach->beachfront == 'yes' ? 'selected' : '' }}>Yes</option>
+                                <option value="no" {{ @$edit_mode && $villa->beach->beachfront == 'no' ? 'selected' : '' }}>No</option>
+                            </select>
+                            @error('beachfront')
+                                <label id="beachfront-error" class="text-danger pl-3" for="beachfront">{{ $message }}</label>
+                            @enderror
+                        </div>
                         
                         <button type="submit" class="btn btn-primary submit">Simpan</button>
                     </div>

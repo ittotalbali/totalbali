@@ -3,6 +3,7 @@
 namespace App\Http\Resources\API\VillaManagement;
 
 use App\Services\VillaManagement\Villa\Mapping\AlbumsMappingService;
+use App\Services\VillaManagement\Villa\Mapping\BeachVillaMappingService;
 use App\Services\VillaManagement\Villa\Mapping\BedroomsMappingService;
 use App\Services\VillaManagement\Villa\Mapping\CarAndDriverMappingService;
 use App\Services\VillaManagement\Villa\Mapping\ChefMappingService;
@@ -80,6 +81,7 @@ class GetVillaDetailsResource extends JsonResource
             'family_villa' => $data['family_villa'],
             'nearby_club' => $data['nearby_club'],
             'nearby_villa' => $data['nearby_villa'],
+            'beach_villa' => $data['beach_villa'],
         ];
     }
 
@@ -167,6 +169,9 @@ class GetVillaDetailsResource extends JsonResource
             'nearby_villa' => (new NearbyVillaMappingService)->execute([
                 'villa_id' => $this->id,
                 'location_id' => $this->location_id
+            ])->data,
+            'beach_villa' => (new BeachVillaMappingService)->execute([
+                'beach' => $this->beach
             ])->data,
         ];
     }

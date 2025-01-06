@@ -18,5 +18,6 @@ class BeachVilla extends Model
         'extra_information',
         'other_information',
         'id_villa',
+        'beachfront',
     ];
 }
