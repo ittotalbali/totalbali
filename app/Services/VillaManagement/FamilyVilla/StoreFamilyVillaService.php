@@ -25,7 +25,6 @@ class StoreFamilyVillaService implements BaseService
             'costs_for_chef_currency' => $dto['costs_for_chef_currency'] ?? null,
             'nanny_cost_currency' => $dto['nanny_cost_currency'] ?? null,
             'included_currency' => $dto['included_currency'] ?? null,
-            'kids_toys' => $dto['kids_toys'] ?? null,
         ]);
 
         return (object) [

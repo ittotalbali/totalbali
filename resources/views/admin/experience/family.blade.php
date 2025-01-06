@@ -60,14 +60,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Kids Toys</label>
-                            <textarea name="kids_toys" id="kids_toys" class="form-control @error('kids_toys') is-invalid @enderror" cols="30" rows="4">{{ @$edit_mode ? $villa->family->kids_toys : old('kids_toys') }}</textarea>
-                            @error('kids_toys')
-                                <label id="kids_toys-error" class="text-danger pl-3" for="kids_toys">{{ $message }}</label>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
                             <label>Chef</label>
                             <select name="chef" id="chef" class="form-select @error('chef') is-invalid @enderror">
                                 <option value="">-- Choose Chef --</option>
