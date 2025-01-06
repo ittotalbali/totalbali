@@ -131,10 +131,9 @@ class GetVillaService implements BaseService
                 if(!empty($dto['wedding_villa']['params'])) {
                     foreach($dto['wedding_villa']['params'] as $key => $value) {
                         if(
-                            // $key == 'standing_guests' or
-                            // $key == 'seated_guests' or
-                            // $key == 'ocean_views'
-                            is_string($key)
+                            $key == 'standing_guests' or
+                            $key == 'seated_guests' or
+                            $key == 'ocean_views'
                         ) {
                             $q->where($key, $value);
                         }else {
