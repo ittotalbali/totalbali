@@ -23,5 +23,6 @@ class FamilyVilla extends Model
         'costs_for_chef_currency',
         'nanny_cost_currency',
         'included_currency',
+        'kids_toys',
     ];
 }
