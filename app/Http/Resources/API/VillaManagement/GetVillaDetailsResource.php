@@ -3,6 +3,7 @@
 namespace App\Http\Resources\API\VillaManagement;
 
 use App\Services\VillaManagement\Villa\Mapping\AlbumsMappingService;
+use App\Services\VillaManagement\Villa\Mapping\BeachVillaMappingService;
 use App\Services\VillaManagement\Villa\Mapping\BedroomsMappingService;
 use App\Services\VillaManagement\Villa\Mapping\CarAndDriverMappingService;
 use App\Services\VillaManagement\Villa\Mapping\ChefMappingService;
