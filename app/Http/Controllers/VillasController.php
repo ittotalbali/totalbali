@@ -197,22 +197,21 @@ class VillasController extends Controller
             $bathroom = $request->bathroom ?? 0;
     
             $location = Location::find($request->location_id);
-            $sub_location = SubLocation::find($request->sub_location_id);
+            // $sub_location = SubLocation::find($request->sub_location_id);
             // $sub_location_villa_count = Villas::where('sub_location_id', $request->sub_location_id)->count() + 1;
             // $formatted_villa_count = str_pad($sub_location_villa_count, 3, '0', STR_PAD_LEFT);
 
-            $villa_codes = Villas::where('sub_location_id', $request->sub_location_id)->pluck('code')->toArray();
+            $villa_codes = Villas::where('location_id', $request->location_id)->pluck('code')->toArray();
             $counters = [];
 
             foreach($villa_codes as $villa_code) {
-                $counter = !empty(explode('-', $villa_code)[2]) ? explode('-', $villa_code)[2] : explode('-', $villa_code)[1];
-                $counters[] = substr($counter, -3);
+                $counters[] = substr($villa_code, -3);
             }
 
             $last_count = max($counters) + 1;
             $formatted_villa_count = str_pad($last_count, 3, '0', STR_PAD_LEFT);
     
-            $code = $location->name . '-' . $sub_location->name . '-' . $bedroom . $bathroom . $formatted_villa_count;
+            $code = $location->name . '-' . $bedroom . $bathroom . $formatted_villa_count;
         }
 
         $villaId = Villas::insertGetId([
@@ -927,24 +926,37 @@ class VillasController extends Controller
             $bathroom = $request->bathroom ?? 0;
 
             $location = Location::find($request->location_id);
-            $sub_location = SubLocation::find($request->sub_location_id);
+            // $sub_location = SubLocation::find($request->sub_location_id);
             // $sub_location_villa_count = Villas::where('sub_location_id', $request->sub_location_id)->count() + 1;
             // $formatted_villa_count = str_pad($sub_location_villa_count, 3, '0', STR_PAD_LEFT);
 
-            $villa_codes = Villas::where('sub_location_id', $request->sub_location_id)
+            $villa_codes = Villas::where('location_id', $request->location_id)
             ->where('id', '!=', $id)
             ->pluck('code')->toArray();
             $counters = [];
 
             foreach($villa_codes as $villa_code) {
-                $counter = !empty(explode('-', $villa_code)[2]) ? explode('-', $villa_code)[2] : explode('-', $villa_code)[1];
-                $counters[] = substr($counter, -3);
+                $counters[] = substr($villa_code, -3);
             }
 
-            $last_count = max($counters) + 1;
-            $formatted_villa_count = str_pad($last_count, 3, '0', STR_PAD_LEFT);
+            $current_counter = substr($request->code, -3);
+            $current_counter_occurence = array_count_values($counters)[$current_counter] ?? 0;
+
+            if($current_counter_occurence == 0) {
+                $current_location_id = Villas::find($id)->location_id;
+
+                if($current_location_id != $request->location_id) {
+                    $last_count = max($counters) + 1;
+                    $formatted_villa_count = str_pad($last_count, 3, '0', STR_PAD_LEFT);
+                }else {
+                    $formatted_villa_count = $current_counter;
+                }
+            }else {
+                $last_count = max($counters) + 1;
+                $formatted_villa_count = str_pad($last_count, 3, '0', STR_PAD_LEFT);
+            }
     
-            $code = $location->name . '-' . $sub_location->name . '-' . $bedroom . $bathroom . $formatted_villa_count;
+            $code = $location->name . '-' . $bedroom . $bathroom . $formatted_villa_count;
         }
         // else {
         //     $bedroom = $request->bedroom ?? 0;
