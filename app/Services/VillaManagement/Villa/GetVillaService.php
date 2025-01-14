@@ -130,12 +130,7 @@ class GetVillaService implements BaseService
             $villa->whereHas('wedding', function($q) use ($dto) {
                 if(!empty($dto['wedding_villa']['params'])) {
                     foreach($dto['wedding_villa']['params'] as $key => $value) {
-                        if(
-                            // $key == 'standing_guests' or
-                            // $key == 'seated_guests' or
-                            // $key == 'ocean_views'
-                            is_string($key)
-                        ) {
+                        if(is_string($key)) {
                             $q->where($key, $value);
                         }else {
                             $q->where($value, '!=', null);
@@ -149,7 +144,14 @@ class GetVillaService implements BaseService
             $villa->whereHas('beach', function($q) use ($dto) {
                 if(!empty($dto['beach_villa']['params'])) {
                     foreach($dto['beach_villa']['params'] as $value) {
-                        $q->where($value, '!=', null);
+                        if(
+                            $value == 'surf_villa' or
+                            $value == 'beachfront'
+                        ) {
+                            $q->where($value, 'yes');
+                        }else {
+                            $q->where($value, '!=', null);
+                        }
                     }
                 }
             });
@@ -159,7 +161,11 @@ class GetVillaService implements BaseService
             $villa->whereHas('family', function($q) use ($dto) {
                 if(!empty($dto['family_villa']['params'])) {
                     foreach($dto['family_villa']['params'] as $value) {
-                        $q->where($value, '!=', null);
+                        if($value == 'chef') {
+                            $q->where($value, 'yes');
+                        }else {
+                            $q->where($value, '!=', null);
+                        }
                     }
                 }
             });
