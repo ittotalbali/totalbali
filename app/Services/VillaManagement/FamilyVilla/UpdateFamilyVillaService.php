@@ -31,6 +31,7 @@ class UpdateFamilyVillaService implements BaseService
             'nanny_cost_currency' => $dto['nanny_cost_currency'] ?? $familyVilla->nanny_cost_currency,
             'included_currency' => $dto['included_currency'] ?? $familyVilla->included_currency,
             'kids_toys' => $dto['kids_toys'] ?? $familyVilla->kids_toys,
+            'other' => $dto['other'] ?? $familyVilla->other,
         ]);
 
         return (object) [

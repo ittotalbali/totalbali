@@ -2497,6 +2497,7 @@ class VillasController extends Controller
             'nanny_cost_currency' => $request->nanny_cost_currency,
             'included_currency' => $request->included_currency,
             'kids_toys' => $request->kids_toys,
+            'other' => $request->other,
         ]);
 
         return redirect()->route('admin.villa.edit', ['id' => $id])->with(['notif_status' => '1', 'notif' => 'Insert Retreats data succeed.']);
@@ -2593,6 +2594,7 @@ class VillasController extends Controller
             'nanny_cost_currency' => $request->nanny_cost_currency,
             'included_currency' => $request->included_currency,
             'kids_toys' => $request->kids_toys,
+            'other' => $request->other,
         ]);
 
         return redirect()->route('admin.villa.edit', ['id' => $id])

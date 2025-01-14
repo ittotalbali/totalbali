@@ -24,5 +24,6 @@ class FamilyVilla extends Model
         'nanny_cost_currency',
         'included_currency',
         'kids_toys',
+        'other',
     ];
 }
