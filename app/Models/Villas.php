@@ -58,7 +58,8 @@ class Villas extends Model
         'max_guests',
         'extra_guest_charge',
         'link_ical',
-        'villa_link'
+        'villa_link',
+        'villa_bvp',
     ];
 
     public function countries()

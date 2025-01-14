@@ -389,6 +389,15 @@
                                             <label>Internet Information</label>
                                             <input type="text" name="internet" id="internet" class="form-control">
                                         </div>
+                                        <div class="form-group">
+                                            <label>Villa BVP</label>
+                                            <select name="villa_bvp" id="villa_bvp"
+                                                class="form-select @error('villa_bvp') is-invalid @enderror">
+                                                <option value="">-- Choose Villa BVP --</option>
+                                                <option value="yes">Yes</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -256,7 +256,8 @@ class VillasController extends Controller
             'status' => $statusPost,
             'user_id' => Auth::user()->id,
             'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
+            'updated_at' => date('Y-m-d H:i:s'),
+            'villa_bvp' => $request->villa_bvp,
         ]);
         $current = Villas::findOrFail($villaId);
         $current->facilities()->attach($request->faciliti);
@@ -1013,6 +1014,7 @@ class VillasController extends Controller
             'cor_long' => $request->cor_long,
             'status' => $statusPost,
             // 'link_ical' => $request->link_ical,
+            'villa_bvp' => $request->villa_bvp,
         );
 
         $villa = Villas::findOrFail($id);

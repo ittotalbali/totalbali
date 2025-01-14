@@ -431,6 +431,14 @@
                                             <input type="text" name="internet" class="form-control"
                                                 value="{{ $edit->internet }}">
                                         </div>
+                                        <div class="form-group">
+                                            <label>Villa BVP</label>
+                                            <select name="villa_bvp" id="villa_bvp"
+                                                class="form-select @error('villa_bvp') is-invalid @enderror">
+                                                <option value="yes" {{ $edit->villa_bvp == 'yes' ? 'selected' : '' }}>Yes</option>
+                                                <option value="no" {{ $edit->villa_bvp == 'no' ? 'selected' : '' }}>No</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
