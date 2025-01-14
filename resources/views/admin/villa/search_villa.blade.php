@@ -167,7 +167,7 @@
                                     <td>{{ $no++ }}</td>
                                     <td><a href="{{ $item->new_link }}" class="redirect-url">{{ $item->name }}</a></td>
                                     @if (isset($item->code))
-                                    <td><a href="https://totalbali.com/detail-villa?id={{ $item->id }}" class="redirect-url">{{ $item->code }}</a></td>
+                                    <td><a href="https://totalbali.com/villa/detail-villa?id={{ $item->id }}" class="redirect-url">{{ $item->code }}</a></td>
                                     @else
                                     <td>N/A</td>
                                     @endif
@@ -177,9 +177,9 @@
                                     <td>{{ $item->bedroom }}</td>
                                     <td>{{ $item->bathroom }}</td>
                                     <td>{{ $item->base_rate_currency . ' ' . number_format($item->base_rate) }}</td>
-                                    <td class="text-wrap">{{ $item->pricing->monthly_description ?? 'N/A' }}</td>
-                                    <td class="text-wrap">{{ $item->pricing->yearly_description ?? 'N/A' }}</td>
-                                    <td class="text-wrap">{{ $item->pricing->available_for_sales_description ?? 'N/A' }}</td>
+                                    <td>{!! $item->pricing->monthly_description ?? 'N/A' !!}</td>
+                                    <td>{!! $item->pricing->yearly_description ?? 'N/A' !!}</td>
+                                    <td>{!! $item->pricing->available_for_sales_description ?? 'N/A' !!}</td>
                                     <td><a href="{{ $item->link_map }}" class="redirect-url"><i data-feather="map-pin"></i></a></td>
                                     <td><a href="{{ $item->airbnb_link }}" class="redirect-url"><i class="bg-danger text-white" data-feather="link"></i></a></td>
                                     <td><a href="{{ $item->bookingcom_link }}" class="redirect-url"><i class="bg-primary text-white" data-feather="link"></i></a></td>
