@@ -14,6 +14,7 @@ class CloseToTheClubs extends Model
         'type_of_club',
         'good_days',
         'id_villa',
+        'other',
     ];
 
     public function villa() {

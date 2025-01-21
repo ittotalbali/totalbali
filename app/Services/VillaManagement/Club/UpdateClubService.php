@@ -21,6 +21,7 @@ class UpdateClubService implements BaseService
             'club_name' => $dto['club_name'] ?? $club->club_name,
             'type_of_club' => $dto['type_of_club'] ?? $club->type_of_club,
             'good_days' => $dto['good_days'] ?? $club->good_days,
+            'other' => $dto['other'] ?? $club->other,
         ]);
 
         return (object) [

@@ -16,6 +16,7 @@ class StoreClubService implements BaseService
             'club_name' => $dto['club_name'],
             'type_of_club' => $dto['type_of_club'],
             'good_days' => $dto['good_days'],
+            'other' => $dto['other'],
         ]);
 
         return (object) [

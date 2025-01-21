@@ -18,6 +18,7 @@ class NearbyClubMappingService implements BaseService
                     'club_name' => $item->club_name,
                     'type_of_club' => $item->type_of_club,
                     'good_days' => $item->good_days,
+                    'other' => $item->other,
                 ];
             });
         }

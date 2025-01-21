@@ -46,7 +46,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group ml-1" style="width: 30%">
+                                <div class="form-group ml-1" style="width: 20%">
                                     <label>Type of Club</label>
                                     <input type="text"
                                         class="form-control"
@@ -63,6 +63,18 @@
                                     <input type="text"
                                         class="form-control"
                                         placeholder="Insert Good Days" name="goodDays"
+                                        value="">
+                                    @error('price')
+                                        <label id="price-error" class="text-danger pl-3"
+                                            for="price">{{ $message }}</label>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group ml-1 flex-grow-1">
+                                    <label>Other</label>
+                                    <input type="text"
+                                        class="form-control"
+                                        placeholder="Insert Other" name="other"
                                         value="">
                                     @error('price')
                                         <label id="price-error" class="text-danger pl-3"
@@ -168,11 +180,13 @@
                 let clubNameField = document.querySelectorAll('input[name="clubName"]');
                 let typeOfClubField = document.querySelectorAll('input[name="typeOfClub"]');
                 let goodDaysField = document.querySelectorAll('input[name="goodDays"]');
+                let otherField = document.querySelectorAll('input[name="other"]');
 
                 clubIdField[clubIdField.length - 1].value = club.id;
                 clubNameField[clubNameField.length - 1].value = club.club_name;
                 typeOfClubField[typeOfClubField.length - 1].value = club.type_of_club;
                 goodDaysField[goodDaysField.length - 1].value = club.good_days;
+                otherField[otherField.length - 1].value = club.other;
 
                 if(res.indexOf(club) < res.length - 1) createClub();
             });
@@ -191,6 +205,7 @@
                 const clubName = form.querySelector('input[name="clubName"]').value;
                 const typeOfClub = form.querySelector('input[name="typeOfClub"]').value;
                 const goodDays = form.querySelector('input[name="goodDays"]').value;
+                const other = form.querySelector('input[name="other"]').value;
 
                 // if(clubName && typeOfClub && goodDays) {
                     clubs.push({
@@ -198,7 +213,8 @@
                         club_id: clubId,
                         club_name: clubName,
                         type_of_club: typeOfClub,
-                        good_days: goodDays
+                        good_days: goodDays,
+                        other: other
                     });
                 // }
             });

@@ -2356,6 +2356,7 @@ class VillasController extends Controller
                     'club_name' => $club->club_name,
                     'type_of_club' => $club->type_of_club,
                     'good_days' => $club->good_days,
+                    'other' => $club->other,
                 ]);
             }else {
                 $updateClubService->execute([
@@ -2364,6 +2365,7 @@ class VillasController extends Controller
                     'club_name' => $club->club_name,
                     'type_of_club' => $club->type_of_club,
                     'good_days' => $club->good_days,
+                    'other' => $club->other,
                 ]);
             }
         }
