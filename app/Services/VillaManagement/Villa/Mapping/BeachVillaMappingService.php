@@ -32,6 +32,7 @@ class BeachVillaMappingService implements BaseService
                 'extra_information' => $beach->extra_information,
                 'other_information' => $beach->other_information,
                 'beachfront' => $beach->beachfront,
+                'other' => $beach->other,
             ];
         }
 

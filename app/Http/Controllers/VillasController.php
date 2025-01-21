@@ -2236,6 +2236,7 @@ class VillasController extends Controller
             'other_information' => $request->other_information,
             'id_villa' => $id,
             'beachfront' => $request->beachfront,
+            'other' => $request->other,
         ];
         BeachVilla::create($object);
         return redirect()->route('admin.villa.edit', ['id' => $id])->with(['notif_status' => '1', 'notif' => 'Insert Retreats data succeed.']);
@@ -2279,6 +2280,7 @@ class VillasController extends Controller
             'extra_information' => $request->extra_information,
             'other_information' => $request->other_information,
             'beachfront' => $request->beachfront,
+            'other' => $request->other,
         );
 
 
