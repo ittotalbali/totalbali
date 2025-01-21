@@ -2654,6 +2654,7 @@ class VillasController extends Controller
             'birdwatching' => $request->birdwatching,
             'guide' => $request->guide,
             'id_villa' => $id,
+            'other' => $request->other,
         ];
         MountainVilla::create($object);
         return redirect()->route('admin.villa.edit', ['id' => $id])->with(['notif_status' => '1', 'notif' => 'Insert Retreats data succeed.']);
@@ -2698,6 +2699,7 @@ class VillasController extends Controller
             'track_information' => $request->track_information,
             'birdwatching' => $request->birdwatching,
             'guide' => $request->guide,
+            'other' => $request->other,
         );
 
         $villa = Villas::where('id',$id)->with('mountain')->firstorfail();

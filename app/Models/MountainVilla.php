@@ -19,5 +19,6 @@ class MountainVilla extends Model
         'birdwatching',
         'guide',
         'id_villa',
+        'other',
     ];
 }
