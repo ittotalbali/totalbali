@@ -17,10 +17,10 @@ class CalendarController extends Controller
     }
     public function import(Request $request, $id)
     {
-        // dd($id);
-        // $rules = array(
-        //     'ical' => 'required',
-        // );
+        if(empty($request->ical_link) and empty($request->file('ical'))) {
+            return redirect()->route('admin.villa.edit', ['id' => $id])
+                ->with(['notif_status' => '0', 'notif' => 'Ical link or file required']);
+        }
 
         if(!empty($request->ical_link)) {
             $ch = curl_init();
@@ -46,7 +46,7 @@ class CalendarController extends Controller
 
         if(empty($fileContents)) {
             return redirect()->route('admin.villa.edit', ['id' => $id])
-                ->with(['notif_status' => '0', 'notif' => 'Import failed because empty. link successfully updated!']);
+                ->with(['notif_status' => '0', 'notif' => 'Import failed because empty']);
         }
         
         try {
@@ -56,7 +56,7 @@ class CalendarController extends Controller
                 unset($cek[$i]);
             }
             $data_filter = implode(',',$cek);
-            // dd($data_filter);
+
             $text = [
                 "BEGIN:VCALENDAR", 
                 ",BEGIN:VEVENT", 
@@ -88,15 +88,29 @@ class CalendarController extends Controller
             $newPhrase = str_replace($text, $array, $data);
             $json = json_decode($newPhrase);
 
-            if(empty($json)) {
-                if (!empty($request->ical_link)) {
-                Villas::find($id)->update(['link_ical' => $request->ical_link]);
-            }
-                return redirect()->route('admin.villa.edit', ['id' => $id])
-                    ->with(['notif_status' => '0', 'notif' => 'Import failed because empty. link successfully updated!']);
+            if(empty($json) and !empty($newPhrase)){
+                $newPhrase = str_replace("[{", "", $newPhrase);
+                $newPhrase = str_replace("}]", "", $newPhrase);
+                $newPhrase = str_replace('"text":",', "", $newPhrase);
+                $newPhrase = str_replace('"', "", $newPhrase);
+                $newPhrase = explode('},{', $newPhrase);
+
+                $json = [];
+                foreach($newPhrase as $value) {
+                    $json[] = (object) [
+                        'text' => $value
+                    ];
+                }
             }
 
-            // return $json;
+            if(empty($json)) {
+            //     if (!empty($request->ical_link)) {
+            //     Villas::find($id)->update(['link_ical' => $request->ical_link]);
+            // }
+                return redirect()->route('admin.villa.edit', ['id' => $id])
+                    ->with(['notif_status' => '0', 'notif' => 'Import failed because empty']);
+            }
+
             foreach ($json as $key => $value) {
                 $explode1 = explode(',',$value->text);
                 $result[$key]['uuid'] = "";
@@ -128,7 +142,6 @@ class CalendarController extends Controller
                 }
             }
 
-            // return $result;
             DB::table('calenders')->where('villa_id', $id)->delete();
             Calender::insert($result);
 
