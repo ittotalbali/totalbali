@@ -16,5 +16,6 @@ class Retreats extends Model
         'views_from_workout',
         'gym',
         'id_villa',
+        'other',
     ];
 }

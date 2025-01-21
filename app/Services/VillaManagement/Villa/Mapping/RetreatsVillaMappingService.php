@@ -19,6 +19,7 @@ class RetreatsVillaMappingService implements BaseService
                 'house_chef' => $retreats->house_chef,
                 'views_from_workout' => $retreats->views_from_workout,
                 'gym' => $retreats->gym,
+                'other' => $retreats->other,
             ];
         }
 

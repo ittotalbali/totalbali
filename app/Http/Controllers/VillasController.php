@@ -2751,6 +2751,7 @@ class VillasController extends Controller
             'views_from_workout' => $request->views_from_workout,
             'gym' => $request->gym,
             'id_villa' => $id,
+            'other' => $request->other,
         ];
         Retreats::create($object);
         return redirect()->route('admin.villa.edit', ['id' => $id])->with(['notif_status' => '1', 'notif' => 'Insert Retreats data succeed.']);
@@ -2789,7 +2790,8 @@ class VillasController extends Controller
             'house_chef' => $request->house_chef,
             'exclusive_rental' => $request->exclusive_rental,
             'views_from_workout' => $request->views_from_workout,
-            'gym' => $request->gym
+            'gym' => $request->gym,
+            'other' => $request->other,
         ];
         $villa = Villas::where('id',$id)->with('retreats')->firstorfail();
         $current = Retreats::findOrFail($villa->retreats->id);
