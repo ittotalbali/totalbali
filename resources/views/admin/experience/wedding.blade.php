@@ -184,6 +184,15 @@
                                 <label id="beachfront-error" class="text-danger pl-3" for="beachfront">{{ $message }}</label>
                             @enderror
                         </div>
+
+                        <div class="form-group">
+                            <label>Other</label>
+                            <textarea name="other" id="other-editor" class="form-control @error('other') is-invalid @enderror"" cols="30"
+                                rows="4">{{ @$edit_mode ? $villa->wedding->other : old('other') }}</textarea>
+                            @error('other')
+                                <label id="other-error" class="text-danger pl-3" for="other">{{ $message }}</label>
+                            @enderror
+                        </div>
                         
                         <button type="submit" class="btn btn-primary submit">Simpan</button>
                     </div>
@@ -221,7 +230,13 @@
             filebrowserFlashBrowseUrl: "{{ asset('ckfinder/ckfinder.html?type=Flash') }}",
         });
 
-        //]]>
+        CKEDITOR.replace('other-editor', {
+            toolbar: 'MyToolbar',
+            width: "100%",
+            filebrowserBrowseUrl: "{{ asset('ckfinder/ckfinder.html') }}",
+            filebrowserImageBrowseUrl: "{{ asset('ckfinder/ckfinder.html?type=Images') }}",
+            filebrowserFlashBrowseUrl: "{{ asset('ckfinder/ckfinder.html?type=Flash') }}",
+        });
     </script>
 
     <script src="{{ asset('admin/vendors/dropify/dist/dropify.min.js') }}"></script>

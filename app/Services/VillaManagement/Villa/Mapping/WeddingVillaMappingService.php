@@ -39,6 +39,7 @@ class WeddingVillaMappingService implements BaseService
                 'ocean_views' => $wedding->ocean_views,
                 'garden_weddings' => $wedding->garden_weddings,
                 'beachfront' => $wedding->beachfront,
+                'other' => $wedding->other,
             ];
         }
 

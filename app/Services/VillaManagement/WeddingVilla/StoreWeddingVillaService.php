@@ -28,6 +28,7 @@ class StoreWeddingVillaService implements BaseService
             'ocean_views' => $dto['ocean_views'] ?? null,
             'garden_weddings' => $dto['garden_weddings'] ?? null,
             'beachfront' => $dto['beachfront'] ?? null,
+            'other' => $dto['other'] ?? null,
         ]);
 
         return (object) [

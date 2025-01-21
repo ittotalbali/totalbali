@@ -2881,6 +2881,7 @@ class VillasController extends Controller
             'ocean_views' => $request->ocean_views,
             'garden_weddings' => $request->garden_weddings,
             'beachfront' => $request->beachfront,
+            'other' => $request->other,
         ]);
 
         return redirect()->route('admin.villa.edit', ['id' => $id])->with(['notif_status' => '1', 'notif' => 'Insert Retreats data succeed.']);
@@ -2959,6 +2960,7 @@ class VillasController extends Controller
             'ocean_views' => $request->ocean_views,
             'garden_weddings' => $request->garden_weddings,
             'beachfront' => $request->beachfront,
+            'other' => $request->other,
         ]);
 
         return redirect()->route('admin.villa.edit', ['id' => $id])

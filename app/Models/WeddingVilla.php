@@ -27,5 +27,6 @@ class WeddingVilla extends Model
         'ocean_views',
         'garden_weddings',
         'beachfront',
+        'other',
     ];
 }

@@ -33,6 +33,7 @@ class UpdateWeddingVillaService implements BaseService
             'ocean_views' => $dto['ocean_views'] ?? $weddingVilla->ocean_views,
             'garden_weddings' => $dto['garden_weddings'] ?? $weddingVilla->garden_weddings,
             'beachfront' => $dto['beachfront'] ?? $weddingVilla->beachfront,
+            'other' => $dto['other'] ?? $weddingVilla->other,
         ]);
 
         return (object) [
