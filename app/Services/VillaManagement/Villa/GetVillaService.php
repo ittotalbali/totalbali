@@ -186,7 +186,7 @@ class GetVillaService implements BaseService
         }
 
         if(isset($dto['bedroom'])) {
-            if($dto['bedroom'] == 8) {
+            if($dto['bedroom'] == 777) {
                 $villas = $villa->whereHas('rate')->get();
 
                 $villa = $villas->filter(function($villa) {
@@ -196,7 +196,7 @@ class GetVillaService implements BaseService
 
                     foreach($rooms as $room) {
                         foreach($room as $dt) {
-                            if($dt['total_bedroom'] > 7) {
+                            if($dt['total_bedroom'] >= 7) {
                                 return $villa;
                             }
                         }

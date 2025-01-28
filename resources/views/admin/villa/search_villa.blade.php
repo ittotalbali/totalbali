@@ -76,7 +76,7 @@
                                             @for ($i = 1; $i < 8; $i++)
                                             <option value="{{ $i }}" {{ ($request->bedroom == $i) ? 'selected' : '' }}>{{ $i }}</option>
                                             @endfor
-                                            <option value="8" {{ ($request->bedroom == 8) ? 'selected' : '' }}>7+</option>
+                                            <option value="777" {{ ($request->bedroom == 777) ? 'selected' : '' }}>7+</option>
                                         </select>
                                     </div>
                                     {{-- <div class="form-group col-md-3">
