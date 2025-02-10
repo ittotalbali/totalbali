@@ -111,6 +111,16 @@ class CalendarController extends Controller
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because empty']);
             }
 
+            if(!str_contains($json[0]->text, 'start_date')) {
+                return redirect()->route('admin.villa.edit', ['id' => $id])
+                    ->with(['notif_status' => '0', 'notif' => 'Import failed because start date not found']);
+            }
+
+            if(!str_contains($json[0]->text, 'end_date')) {
+                return redirect()->route('admin.villa.edit', ['id' => $id])
+                    ->with(['notif_status' => '0', 'notif' => 'Import failed because end date not found']);
+            }
+
             foreach ($json as $key => $value) {
                 $explode1 = explode(',',$value->text);
                 $result[$key]['uuid'] = "";

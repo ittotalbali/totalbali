@@ -84,6 +84,7 @@ class GetVillaDetailsResource extends JsonResource
             'nearby_villa' => $data['nearby_villa'],
             'beach_villa' => $data['beach_villa'],
             'villa_include' => $data['villa_include'],
+            'villa_bvp' => $this->villa_bvp,
         ];
     }
 

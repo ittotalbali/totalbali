@@ -39,6 +39,7 @@ class GetVillaResource extends JsonResource
             'wedding_villa' => $data['wedding_villa'],
             'galeries' => $data['galeries'],
             'albums' => $data['albums'],
+            'villa_bvp' => $this->villa_bvp,
         ];
     }
 
