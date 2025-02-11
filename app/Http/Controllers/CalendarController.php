@@ -15,6 +15,7 @@ class CalendarController extends Controller
         $data["page_title"] = 'Manajemen Facilities';
         return view('admin.calender.index', $data);
     }
+
     public function import(Request $request, $id)
     {
         if(empty($request->ical_link) and empty($request->file('ical'))) {
@@ -26,6 +27,8 @@ class CalendarController extends Controller
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_URL, $request->ical_link);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0');
             
             $fileContents = curl_exec($ch);
 
@@ -34,15 +37,6 @@ class CalendarController extends Controller
             $file = $request->file('ical');
             $fileContents = file_get_contents($file);
         }
-        // $url = $request->link;
-        // Open the file for reading
-        // $url = "https://www.example.com/downloadable_file.pdf"; // Replace with your URL
-
-        // if ($this->verifyDownloadableUrl($url)) {
-        //     dd('The URL may point to a downloadable file, but content type verification is not performed.');
-        // } else {
-        //     dd('The URL may not point to a downloadable file, or an error occurred.');
-        // }
 
         if(empty($fileContents)) {
             return redirect()->route('admin.villa.edit', ['id' => $id])
@@ -69,6 +63,8 @@ class CalendarController extends Controller
                 ",UID:",
                 ",UUID:",
                 ",DESCRIPTION:",
+                ",DTSTART:",
+                ",DTEND:",
             ];
             $array   = [
                 '[', 
@@ -81,7 +77,9 @@ class CalendarController extends Controller
                 ',summary:',
                 ',uuid:',
                 ',uuid:',
-                ',description:'
+                ',description:',
+                ',start_date:',
+                ',end_date:',
             ];
             
             $data = trim(preg_replace('/\s+/', '', $data_filter));
@@ -104,9 +102,6 @@ class CalendarController extends Controller
             }
 
             if(empty($json)) {
-            //     if (!empty($request->ical_link)) {
-            //     Villas::find($id)->update(['link_ical' => $request->ical_link]);
-            // }
                 return redirect()->route('admin.villa.edit', ['id' => $id])
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because empty']);
             }
@@ -172,9 +167,8 @@ class CalendarController extends Controller
         } catch (\Exception $e) {
             throw $e;
         }
-       
-        
     }
+
     public function kalender($id_villa)
     {
         //
