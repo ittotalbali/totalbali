@@ -2625,27 +2625,27 @@ class VillasController extends Controller
     public function store_mountain(Request $request, $id)
     {
          //\
-         $rules = array(
-            'mountain_view' => 'required',
-            'view_of_ricefield' => 'required',
-            'river_closeby' => 'required',
-            'waterfall_closeby' => 'required',
-            'activities' => 'required',
-            'track_information' => 'required',
-            'birdwatching' => 'required',
-            'guide' => 'required'
-        );
-        $validator = Validator::make($request->all(), $rules,  $messages = [
-            'required' => 'The :attribute field is required.',
-            'file' => 'The :attribute must be a file.',
+        //  $rules = array(
+        //     'mountain_view' => 'required',
+        //     'view_of_ricefield' => 'required',
+        //     'river_closeby' => 'required',
+        //     'waterfall_closeby' => 'required',
+        //     'activities' => 'required',
+        //     'track_information' => 'required',
+        //     'birdwatching' => 'required',
+        //     'guide' => 'required'
+        // );
+        // $validator = Validator::make($request->all(), $rules,  $messages = [
+        //     'required' => 'The :attribute field is required.',
+        //     'file' => 'The :attribute must be a file.',
 
-        ]);
+        // ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+        // if ($validator->fails()) {
+        //     return redirect()->back()
+        //         ->withErrors($validator)
+        //         ->withInput();
+        // }
         $object = [
             'mountain_view' => $request->mountain_view,
             'view_of_ricefield' => $request->view_of_ricefield,
@@ -2672,26 +2672,26 @@ class VillasController extends Controller
     public function update_mountain(Request $request, $id)
     {
         //
-        $rules = array(
-            'mountain_view' => 'required',
-            'view_of_ricefield' => 'required',
-            'river_closeby' => 'required',
-            'waterfall_closeby' => 'required',
-            'activities' => 'required',
-            'track_information' => 'required',
-            'birdwatching' => 'required',
-            'guide' => 'required'
-        );
-        $validator = Validator::make($request->all(), $rules, $messages = [
-                'required' => 'The :attribute field is required.',
-                'file' => 'The :attribute must be a file.',
-            ]);
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with(['notif_status' => '0', 'notif' => 'Insert data failed.'])
-                ->withInput();
-        }
+        // $rules = array(
+        //     'mountain_view' => 'required',
+        //     'view_of_ricefield' => 'required',
+        //     'river_closeby' => 'required',
+        //     'waterfall_closeby' => 'required',
+        //     'activities' => 'required',
+        //     'track_information' => 'required',
+        //     'birdwatching' => 'required',
+        //     'guide' => 'required'
+        // );
+        // $validator = Validator::make($request->all(), $rules, $messages = [
+        //         'required' => 'The :attribute field is required.',
+        //         'file' => 'The :attribute must be a file.',
+        //     ]);
+        // if ($validator->fails()) {
+        //     return redirect()->back()
+        //         ->withErrors($validator)
+        //         ->with(['notif_status' => '0', 'notif' => 'Insert data failed.'])
+        //         ->withInput();
+        // }
         $object = array(
             'mountain_view' => $request->mountain_view,
             'view_of_ricefield' => $request->view_of_ricefield,
@@ -2731,24 +2731,24 @@ class VillasController extends Controller
     public function store_retreats(Request $request, $id)
     {
         //\
-        $rules = array(
-            'workout_deck' => 'required',
-            'house_chef' => 'required',
-            'exclusive_rental' => 'required',
-            'views_from_workout' => 'required',
-            'gym' => 'required',
-        );
-        $validator = Validator::make($request->all(), $rules,  $messages = [
-            'required' => 'The :attribute field is required.',
-            'file' => 'The :attribute must be a file.',
+        // $rules = array(
+        //     'workout_deck' => 'required',
+        //     'house_chef' => 'required',
+        //     'exclusive_rental' => 'required',
+        //     'views_from_workout' => 'required',
+        //     'gym' => 'required',
+        // );
+        // $validator = Validator::make($request->all(), $rules,  $messages = [
+        //     'required' => 'The :attribute field is required.',
+        //     'file' => 'The :attribute must be a file.',
 
-        ]);
+        // ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+        // if ($validator->fails()) {
+        //     return redirect()->back()
+        //         ->withErrors($validator)
+        //         ->withInput();
+        // }
 
         $object = [
             'workout_deck' => $request->workout_deck,
@@ -2773,24 +2773,24 @@ class VillasController extends Controller
     public function update_retreats(Request $request, $id)
     {
         //
-        $rules = array(
-            'workout_deck' => 'required',
-            'house_chef' => 'required',
-            'exclusive_rental' => 'required',
-            'views_from_workout' => 'required',
-            'gym' => 'required',
-        );
-        $validator = Validator::make($request->all(), $rules,  $messages = [
-            'required' => 'The :attribute field is required.',
-            'file' => 'The :attribute must be a file.',
+        // $rules = array(
+        //     'workout_deck' => 'required',
+        //     'house_chef' => 'required',
+        //     'exclusive_rental' => 'required',
+        //     'views_from_workout' => 'required',
+        //     'gym' => 'required',
+        // );
+        // $validator = Validator::make($request->all(), $rules,  $messages = [
+        //     'required' => 'The :attribute field is required.',
+        //     'file' => 'The :attribute must be a file.',
 
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with(['notif_status' => '0', 'notif' => 'Insert data failed.'])
-                ->withInput();
-        }
+        // ]);
+        // if ($validator->fails()) {
+        //     return redirect()->back()
+        //         ->withErrors($validator)
+        //         ->with(['notif_status' => '0', 'notif' => 'Insert data failed.'])
+        //         ->withInput();
+        // }
         $object = [
             'workout_deck' => $request->workout_deck,
             'house_chef' => $request->house_chef,
