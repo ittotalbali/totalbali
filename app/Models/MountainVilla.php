@@ -12,7 +12,7 @@ class MountainVilla extends Model
     protected $fillable = [
         'mountain_view',
         'view_of_ricefield',
-        'rover_closeby',
+        'river_closeby',
         'waterfall_closeby',
         'activities',
         'track_information',

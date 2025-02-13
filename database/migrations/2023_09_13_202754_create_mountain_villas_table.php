@@ -17,7 +17,7 @@ class CreateMountainVillasTable extends Migration
             $table->id();
             $table->string('mountain_view')->nullable();
             $table->string('view_of_ricefield')->nullable();
-            $table->string('rover_closeby')->nullable();
+            $table->string('river_closeby')->nullable();
             $table->string('waterfall_closeby')->nullable();
             $table->string('activities')->nullable();
             $table->string('track_information')->nullable();

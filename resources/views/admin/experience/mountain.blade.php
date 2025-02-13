@@ -45,9 +45,9 @@
 
                         <div class="form-group">
                             <label>Rover Closeby</label>
-                            <textarea name="rover_closeby" id="rover_closeby" class="form-control @error('rover_closeby') is-invalid @enderror" cols="30" rows="4">{{ @$edit_mode ? $villa->mountain->rover_closeby : old('rover_closeby') }}</textarea>
-                            @error('rover_closeby')
-                                <label id="rover_closeby-error" class="text-danger pl-3" for="rover_closeby">{{ $message }}</label>
+                            <textarea name="river_closeby" id="river_closeby" class="form-control @error('river_closeby') is-invalid @enderror" cols="30" rows="4">{{ @$edit_mode ? $villa->mountain->river_closeby : old('river_closeby') }}</textarea>
+                            @error('river_closeby')
+                                <label id="river_closeby-error" class="text-danger pl-3" for="river_closeby">{{ $message }}</label>
                             @enderror
                         </div>
 

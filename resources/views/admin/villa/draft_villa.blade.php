@@ -902,7 +902,7 @@
 
                                     <div class="form-group">
                                         <label>Rover Closeby</label>
-                                        <textarea name="rover_closeby" id="rover_closeby" class="form-control" cols="30" rows="4"></textarea>
+                                        <textarea name="river_closeby" id="river_closeby" class="form-control" cols="30" rows="4"></textarea>
                                     </div>
 
                                     <div class="form-group">

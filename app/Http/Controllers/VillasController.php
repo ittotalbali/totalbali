@@ -394,7 +394,7 @@ class VillasController extends Controller
             $data_mountain = [
                 'mountain_view' => $request->mountain_view,
                 'view_of_ricefield' => $request->view_of_ricefield,
-                'rover_closeby' => $request->rover_closeby,
+                'river_closeby' => $request->river_closeby,
                 'waterfall_closeby' => $request->waterfall_closeby,
                 'activities' => $request->activities,
                 'track_information' => $request->track_information,
@@ -1412,7 +1412,7 @@ class VillasController extends Controller
         if (
             $request->mountain_view &&
             $request->view_of_ricefield &&
-            $request->rover_closeby &&
+            $request->river_closeby &&
             $request->waterfall_closeby &&
             $request->activities &&
             $request->track_information &&
@@ -1422,7 +1422,7 @@ class VillasController extends Controller
             $data_mountain = [
                 'mountain_view' => $request->mountain_view,
                 'view_of_ricefield' => $request->view_of_ricefield,
-                'rover_closeby' => $request->rover_closeby,
+                'river_closeby' => $request->river_closeby,
                 'waterfall_closeby' => $request->waterfall_closeby,
                 'activities' => $request->activities,
                 'track_information' => $request->track_information,
@@ -1435,7 +1435,7 @@ class VillasController extends Controller
         if (
             $request->mountain_view_edit ||
             $request->view_of_ricefield_edit ||
-            $request->rover_closeby_edit ||
+            $request->river_closeby_edit ||
             $request->waterfall_closeby_edit ||
             $request->activities_edit ||
             $request->track_information_edit ||
@@ -1445,7 +1445,7 @@ class VillasController extends Controller
             $data_mountain = [
                 'mountain_view' => $request->mountain_view_edit,
                 'view_of_ricefield' => $request->view_of_ricefield_edit,
-                'rover_closeby' => $request->rover_closeby_edit,
+                'river_closeby' => $request->river_closeby_edit,
                 'waterfall_closeby' => $request->waterfall_closeby_edit,
                 'activities' => $request->activities_edit,
                 'track_information' => $request->track_information_edit,
@@ -2628,7 +2628,7 @@ class VillasController extends Controller
          $rules = array(
             'mountain_view' => 'required',
             'view_of_ricefield' => 'required',
-            'rover_closeby' => 'required',
+            'river_closeby' => 'required',
             'waterfall_closeby' => 'required',
             'activities' => 'required',
             'track_information' => 'required',
@@ -2649,7 +2649,7 @@ class VillasController extends Controller
         $object = [
             'mountain_view' => $request->mountain_view,
             'view_of_ricefield' => $request->view_of_ricefield,
-            'rover_closeby' => $request->rover_closeby,
+            'river_closeby' => $request->river_closeby,
             'waterfall_closeby' => $request->waterfall_closeby,
             'activities' => $request->activities,
             'track_information' => $request->track_information,
@@ -2675,7 +2675,7 @@ class VillasController extends Controller
         $rules = array(
             'mountain_view' => 'required',
             'view_of_ricefield' => 'required',
-            'rover_closeby' => 'required',
+            'river_closeby' => 'required',
             'waterfall_closeby' => 'required',
             'activities' => 'required',
             'track_information' => 'required',
@@ -2695,7 +2695,7 @@ class VillasController extends Controller
         $object = array(
             'mountain_view' => $request->mountain_view,
             'view_of_ricefield' => $request->view_of_ricefield,
-            'rover_closeby' => $request->rover_closeby,
+            'river_closeby' => $request->river_closeby,
             'waterfall_closeby' => $request->waterfall_closeby,
             'activities' => $request->activities,
             'track_information' => $request->track_information,

@@ -480,7 +480,7 @@
                                 </tr>
                                 <tr>
                                     <td>Rover Closeby</td>
-                                    <td>{{ $edit->mountain->rover_closeby }}</td>
+                                    <td>{{ $edit->mountain->river_closeby }}</td>
                                 </tr>
                                 <tr>
                                     <td>Waterfall Closeby</td>
