@@ -265,6 +265,10 @@ class VillasController extends Controller
 
         if ($request->file('image') != null) {
             foreach ($request->file('image') as $key => $value) {
+                if ($value->getSize() > 500000) {
+                    return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                }
+
                 $image = Storage::disk('uploads')->put('galeri_villa', $value);
                 $input['image'] = $image;
                 $input['title'] = $key;
@@ -308,6 +312,10 @@ class VillasController extends Controller
                 $album_id = Album::insertGetId($input_album);
                 if ($request->image_album != null) {
                     foreach ($request->image_album[$key] as $index => $image) {
+                        if ($image->getSize() > 500000) {
+                            return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                        }
+
                         $image = Storage::disk('uploads')->put('galeri_album', $image);
                         $galery_album['album_id'] = $album_id;
                         $galery_album['villa_id'] = $villaId;
@@ -331,6 +339,10 @@ class VillasController extends Controller
             $idAlbumFloorplan = Floorplan::insertGetId($data_floorplan);
             if ($request->hasfile('image_floorplan')) {
                 foreach ($request->file('image_floorplan') as $key => $value) {
+                    if ($value->getSize() > 500000) {
+                        return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                    }
+
                     $image = Storage::disk('uploads')->put('galeri_floorplan', $value);
                     $input['gambar'] = $image;
                     $input['deskripsi'] = $request->deskripsi_floorplan[$key];
@@ -427,6 +439,10 @@ class VillasController extends Controller
                 'id_villa' => $villaId,
             ];
             if ($request->has('photos')) {
+                if ($request->photos->getSize() > 500000) {
+                    return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                }
+
                 $photos = Storage::disk('uploads')->put('familly_villa', $request->photos);
                 $data_family_villa['photos'] = $photos;
             }
@@ -650,6 +666,10 @@ class VillasController extends Controller
         $current->facilities()->attach($request->faciliti);
 
         foreach ($request->file('image') as $key => $value) {
+            if ($value->getSize() > 500000) {
+                return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+            }
+
             $image = Storage::disk('uploads')->put('galeri_villa', $value);
             $input['image'] = $image;
             $input['title'] = $key;
@@ -1022,6 +1042,10 @@ class VillasController extends Controller
             $images = $request->file('image_edit');
             foreach ($images as $key => $image) {
                 if ($image->isValid()) {
+                    if ($image->getSize() > 500000) {
+                        return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                    }
+
                     $image = Storage::disk('uploads')->put('galeri_villa', $image);
                     $galery = GaleriVilla::findOrFail($key);
                     $object_gal['image'] = $image;
@@ -1043,6 +1067,10 @@ class VillasController extends Controller
 
         if ($request->file('image') != null) {
             foreach ($request->file('image') as $key => $value) {
+                if ($value->getSize() > 500000) {
+                    return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                }
+
                 $image = Storage::disk('uploads')->put('galeri_villa', $value);
                 $input['image'] = $image;
                 $input['title'] = $key;
@@ -1126,6 +1154,10 @@ class VillasController extends Controller
                 $album_id = Album::insertGetId($input_album);
                 if ($request->image_album != null) {
                     foreach ($request->image_album[$key] as $index => $image) {
+                        if ($image->getSize() > 500000) {
+                            return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                        }
+                        
                         $image = Storage::disk('uploads')->put('galeri_album', $image);
                         $galery_album['album_id'] = $album_id;
                         $galery_album['villa_id'] = $id;
@@ -1156,6 +1188,10 @@ class VillasController extends Controller
                     $images = $request->file('image_album_edit');
                     foreach ($images as $keyEdit => $image) {
                         if ($image->isValid()) {
+                            if ($image->getSize() > 500000) {
+                                return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                            }
+
                             $galery = Galeri::findOrFail($keyEdit);
                             
                             if ($galery->image) {
@@ -1183,6 +1219,10 @@ class VillasController extends Controller
                 
                 if ($request->hasfile('image_album.' . $key)) {
                     foreach ($request->file('image_album.' . $key) as $keyNew => $value) {
+                        if ($value->getSize() > 500000) {
+                            return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                        }
+
                         $image = Storage::disk('uploads')->put('galeri_album', $value);
                         $dataAlbum = new Galeri([
                             'album_id' => $key,
@@ -1225,6 +1265,10 @@ class VillasController extends Controller
             $idAlbumFloorplan = Floorplan::insertGetId($data_floorplan);
         if ($request->hasfile('image_floorplan')) {
             foreach ($request->file('image_floorplan') as $key => $value) {
+                if ($value->getSize() > 500000) {
+                    return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                }
+
                 $image = Storage::disk('uploads')->put('galeri_floorplan',$value);
                 $input['gambar'] = $image;
                 $input['deskripsi'] = $request->deskripsi_floorplan[$key];
@@ -1247,6 +1291,10 @@ class VillasController extends Controller
             $images = $request->file('image_floorplan_edit');
             foreach ($images as $key => $image) {
                 if ($image->isValid()) {
+                    if ($image->getSize() > 500000) {
+                        return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                    }
+                    
                     // Simpan gambar ke storage
                     $image = Storage::disk('uploads')->put('galeri_floorplan', $image);
     
@@ -1276,6 +1324,10 @@ class VillasController extends Controller
         if ($request->hasfile('new_image_floorplan')) {
             foreach ($request->file('new_image_floorplan') as $key => $image) {
                 if ($image->isValid()) {
+                    if ($image->getSize() > 500000) {
+                        return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                    }
+
                     $imagePath = Storage::disk('uploads')->put('galeri_floorplan', $image);
     
                     $newGalleryData = [
@@ -1507,6 +1559,10 @@ class VillasController extends Controller
                 'id_villa' => $id,
             ];
             if ($request->has('photos')) {
+                if ($request->photos->getSize() > 500000) {
+                    return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                }
+
                 $photos = Storage::disk('uploads')->put('familly_villa', $request->photos);
                 $data_family_villa['photos'] = $photos;
             }
@@ -1537,6 +1593,10 @@ class VillasController extends Controller
             $current = FamilyVilla::findOrFail($request->family_id);
 
             if ($request->has('photos_edit')) {
+                if ($request->photos_edit->getSize() > 500000) {
+                    return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                }
+
                 $photos = Storage::disk('uploads')->put('familly_villa', $request->photos_edit);
                 $data_family_villa['photos'] = $photos;
                 if ($current->photos) {
@@ -2043,6 +2103,10 @@ class VillasController extends Controller
         // dd($request->all());
 
         if ($request->has('image')) {
+            if ($request->image->getSize() > 500000) {
+                return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+            }
+
             $image = Storage::disk('uploads')->put('galeri_villa', $request->image);
             $object['image'] = $image;
             // dd($object['avatar']);
@@ -2484,6 +2548,10 @@ class VillasController extends Controller
         // ];
         $photos = null;
         if ($request->has('photos')) {
+            if ($request->photos->getSize() > 500000) {
+                return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+            }
+
             $image = Storage::disk('uploads')->put('family', $request->photos);
             $photos = $image;
         }
@@ -2567,6 +2635,10 @@ class VillasController extends Controller
         $photos = null;
 
         if ($request->has('photos')) {
+            if ($request->photos->getSize() > 500000) {
+                return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+            }
+
             $family = $villa->family;
             // Hapus foto lama jika ada
             if ($family->photos && Storage::disk('uploads')->exists($family->photos)) {

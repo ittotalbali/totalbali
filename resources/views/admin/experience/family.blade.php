@@ -17,6 +17,8 @@
 
     </div>
 
+    @include('admin.layouts.alert')
+
     <form action="{{ @$edit_mode ? route('admin.villa.update_family', $villa->id) : route('admin.villa.store_family', $villa->id) }}"
         enctype="multipart/form-data" method="POST">
         @csrf
