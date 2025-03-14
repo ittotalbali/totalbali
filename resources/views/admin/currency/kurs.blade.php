@@ -166,7 +166,7 @@ $(document).ready(function () {
             };
 
             var apiKey = '5c3c28eb9ffed1087400d2f4274731a2';
-            var apiUrl = 'https://api-total-villa-mock.creaf.tech/api/v1/currency-exchanges';
+            var apiUrl = 'https://api-currency.baliweddingvilla.com/api/v1/currency-exchanges';
 
 
             $.ajax({
@@ -208,7 +208,7 @@ $(document).ready(function () {
         };
 
         var apiKey = '5c3c28eb9ffed1087400d2f4274731a2';
-        var apiUrl = 'https://api-total-villa-mock.creaf.tech/api/v1/currency-exchanges/' + idput; // Menambahkan ID ke URL
+        var apiUrl = 'https://api-currency.baliweddingvilla.com/api/v1/currency-exchanges/' + idput; // Menambahkan ID ke URL
 
         $.ajax({
             url: apiUrl,
