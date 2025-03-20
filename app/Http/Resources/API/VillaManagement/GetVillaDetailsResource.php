@@ -23,6 +23,7 @@ use App\Services\VillaManagement\Villa\Mapping\StaffAtVillaMappingService;
 use App\Services\VillaManagement\Villa\Mapping\VillaCountMappingService;
 use App\Services\VillaManagement\Villa\Mapping\VillaIncludeMappingService;
 use App\Services\VillaManagement\Villa\Mapping\WeddingVillaMappingService;
+use App\Services\VillaManagement\Villa\Mapping\MountainVillaMappingService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GetVillaDetailsResource extends JsonResource
@@ -83,25 +84,27 @@ class GetVillaDetailsResource extends JsonResource
             'nearby_club' => $data['nearby_club'],
             'nearby_villa' => $data['nearby_villa'],
             'beach_villa' => $data['beach_villa'],
+            'mountain_villa' => $data['mountain_villa'],
             'villa_include' => $data['villa_include'],
             'villa_bvp' => $this->villa_bvp,
         ];
     }
 
-    private function dataMapping() {
+    private function dataMapping()
+    {
         $pricing = (new PricingMappingService)->execute([
             'pricing' => $this->pricing
         ])->data;
         $rates = (new RatesMappingService)->execute([
             'rates' => $this->rate
         ])->data;
-        
-        if(!empty($rates)) {
+
+        if (!empty($rates)) {
             $special_rates = [
                 'monthly_rates' => $pricing['monthly'] ?? null,
                 'yearly_rates' => $pricing['yearly'] ?? null,
             ];
-            
+
             $rates = [
                 "season_rates" => $rates,
                 "special_rates" => $special_rates
@@ -175,6 +178,9 @@ class GetVillaDetailsResource extends JsonResource
             ])->data,
             'beach_villa' => (new BeachVillaMappingService)->execute([
                 'beach' => $this->beach
+            ])->data,
+            'mountain_villa' => (new MountainVillaMappingService)->execute([
+                'mountain' => $this->mountain
             ])->data,
             'villa_include' => (new VillaIncludeMappingService)->execute([
                 'pool' => $this->pool,
