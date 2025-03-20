@@ -31,11 +31,11 @@ class GetVillaResource extends JsonResource
             'total_bathroom' => $this->bathroom,
             'base_rate' => $this->base_rate,
             'base_rate_currency' => !empty($this->base_rate_currency) ? $this->base_rate_currency : null,
-            'short_description' => $this->short,
-            'long_description' => $this->long,
+            // 'short_description' => $this->short,
+            // 'long_description' => $this->long,
             'latitude' => $this->cor_lat,
             'longitude' => $this->cor_long,
-            'map_url' => $this->link_map,
+            // 'map_url' => $this->link_map,
             'wedding_villa' => $data['wedding_villa'],
             'galeries' => $data['galeries'],
             'albums' => $data['albums'],
@@ -43,7 +43,8 @@ class GetVillaResource extends JsonResource
         ];
     }
 
-    private function dataMapping() {
+    private function dataMapping()
+    {
         return [
             'galeries' => (new GaleriesMappingService)->execute([
                 'galeries' => $this->galeries
