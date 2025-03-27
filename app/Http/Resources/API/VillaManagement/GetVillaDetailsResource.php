@@ -52,6 +52,7 @@ class GetVillaDetailsResource extends JsonResource
             'villa_count' => $data['villa_count'],
             'total_bedroom' => $this->bedroom,
             'total_bathroom' => $this->bathroom,
+            'base_rate' => $this->base_rate,
             'total_staff' => $this->staff,
             'land_size' => $this->landsize,
             'year_built' => $this->yearbuilt,
