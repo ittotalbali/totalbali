@@ -83,36 +83,39 @@
                                     <label>Bathroom</label>
                                     <select name="bathroom" class="form-control ">
                                         <option value=""> -- Select All -- </option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">5+</option>
+                                        <option value="1" {{ ($request->bathroom == '1') ? 'selected' : '' }}>1</option>
+                                        <option value="2" {{ ($request->bathroom == '2') ? 'selected' : '' }}>2</option>
+                                        <option value="3" {{ ($request->bathroom == '3') ? 'selected' : '' }}>3</option>
+                                        <option value="4" {{ ($request->bathroom == '4') ? 'selected' : '' }}>4</option>
+                                        <option value="5" {{ ($request->bathroom == '5') ? 'selected' : '' }}>5</option>
+                                        <option value="6" {{ ($request->bathroom == '6') ? 'selected' : '' }}>5+</option>
                                     </select>
                                 </div>
+
                                 <div class="form-group col-md-3">
                                     <label>Monthly Rental</label>
                                     <select name="monthly" class="form-control ">
                                         <option value=""> -- Select All -- </option>
-                                        <option value="yes">yes</option>
-                                        <option value="no">no</option>
+                                        <option value="yes" {{ ($request->monthly == 'yes') ? 'selected' : '' }}>yes</option>
+                                        <option value="no" {{ ($request->monthly == 'no') ? 'selected' : '' }}>no</option>
                                     </select>
                                 </div>
+
                                 <div class="form-group col-md-3">
                                     <label>Yearly Rental</label>
                                     <select name="yearly" class="form-control ">
                                         <option value=""> -- Select All -- </option>
-                                        <option value="yes">yes</option>
-                                        <option value="no">no</option>
+                                        <option value="yes" {{ ($request->yearly == 'yes') ? 'selected' : '' }}>yes</option>
+                                        <option value="no" {{ ($request->yearly == 'no') ? 'selected' : '' }}>no</option>
                                     </select>
                                 </div>
+
                                 <div class="form-group col-md-3">
                                     <label>Freehold</label>
                                     <select name="freehold" class="form-control ">
                                         <option value=""> -- Select All -- </option>
-                                        <option value="yes">yes</option>
-                                        <option value="no">no</option>
+                                        <option value="yes" {{ ($request->freehold == 'yes') ? 'selected' : '' }}>yes</option>
+                                        <option value="no" {{ ($request->freehold == 'no') ? 'selected' : '' }}>no</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-3">
@@ -123,9 +126,9 @@
                                         <option value="no" {{ ($request->leasehold == 'no') ? 'selected' : '' }}>no</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-3">
+                                {{--<div class="form-group col-md-3">
                                     <span class="text-danger">* Wajib diisi</span>
-                                </div>
+                                </div>--}}
                             </div>
 
                             <button type="submit" class="btn btn-primary submit">Search</button>
