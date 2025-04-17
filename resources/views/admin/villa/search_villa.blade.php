@@ -119,8 +119,8 @@
                                     <label>Leasehold</label>
                                     <select name="leasehold" class="form-control ">
                                         <option value=""> -- Select All -- </option>
-                                        <option value="yes">yes</option>
-                                        <option value="no">no</option>
+                                        <option value="yes" {{ ($request->leasehold == 'yes') ? 'selected' : '' }}>yes</option>
+                                        <option value="no" {{ ($request->leasehold == 'no') ? 'selected' : '' }}>no</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-3">
