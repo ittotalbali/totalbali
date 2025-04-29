@@ -31,7 +31,6 @@ class CalendarController extends Controller
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0');
 
             $fileContents = curl_exec($ch);
-
             curl_close($ch);
         } else {
             $file = $request->file('ical');
@@ -66,7 +65,7 @@ class CalendarController extends Controller
                 ",DTSTART:",
                 ",DTEND:",
             ];
-            $array   = [
+            $array = [
                 '[',
                 '{"text":"',
                 '"}]',
@@ -95,7 +94,7 @@ class CalendarController extends Controller
 
                 $json = [];
                 foreach ($newPhrase as $value) {
-                    $json[] = (object) [
+                    $json[] = (object)[
                         'text' => $value
                     ];
                 }
@@ -106,21 +105,39 @@ class CalendarController extends Controller
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because empty']);
             }
 
-            if (!str_contains($json[0]->text, 'start_date')) {
+            // 🛠️ FIX bagian pengecekan text (support array atau object)
+            $first = $json[0];
+            if (is_array($first) && isset($first['text'])) {
+                $text = $first['text'];
+            } elseif (is_object($first) && isset($first->text)) {
+                $text = $first->text;
+            } else {
+                $text = '';
+            }
+
+            if (!str_contains($text, 'start_date')) {
                 return redirect()->route('admin.villa.edit', ['id' => $id])
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because start date not found']);
             }
 
-            if (!str_contains($json[0]->text, 'end_date')) {
+            if (!str_contains($text, 'end_date')) {
                 return redirect()->route('admin.villa.edit', ['id' => $id])
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because end date not found']);
             }
 
+            $result = [];
+
             foreach ($json as $key => $value) {
-                if (!is_object($value) || !property_exists($value, 'text')) {
-                    continue; // Lewatkan jika bukan objek atau tidak ada "text"
+                // 🛠️ FIX: cek apakah object/array dan ambil "text"
+                if (is_array($value) && isset($value['text'])) {
+                    $text = $value['text'];
+                } elseif (is_object($value) && isset($value->text)) {
+                    $text = $value->text;
+                } else {
+                    continue;
                 }
-                $explode1 = explode(',', $value->text);
+
+                $explode1 = explode(',', $text);
                 $result[$key]['uuid'] = "";
                 $result[$key]['start_date'] = "";
                 $result[$key]['end_date'] = "";
@@ -132,6 +149,8 @@ class CalendarController extends Controller
 
                 foreach ($explode1 as $key1 => $value1) {
                     $explode2 = explode(':', $value1);
+                    if (!isset($explode2[1])) continue;
+
                     if ($explode2[0] == 'description') {
                         $result[$key][$explode2[0]] = preg_replace('/\s+/', '', str_replace('description:', '', $value1));
                     } elseif ($explode2[0] == 'start_date') {
@@ -153,17 +172,10 @@ class CalendarController extends Controller
             DB::table('calenders')->where('villa_id', $id)->delete();
             Calender::insert($result);
 
-            if (!empty($request->ical_link)) {
-                $villa = Villas::find($id);
-                $villa->update([
-                    'link_ical' => $request->ical_link
-                ]);
-            } else {
-                $villa = Villas::find($id);
-                $villa->update([
-                    'link_ical' => $request->ical_link
-                ]);
-            }
+            $villa = Villas::find($id);
+            $villa->update([
+                'link_ical' => $request->ical_link
+            ]);
 
             return redirect()->route('admin.villa.edit', ['id' => $id])
                 ->with(['notif_status' => '1', 'notif' => 'Import data ical succeed.']);
@@ -171,6 +183,7 @@ class CalendarController extends Controller
             throw $e;
         }
     }
+
 
     public function kalender($id_villa)
     {
