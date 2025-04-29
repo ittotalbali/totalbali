@@ -34,7 +34,8 @@ class CalendarController extends Controller
             // Cek apakah eksekusi curl berhasil
             if ($fileContents === false) {
                 // Tangani error curl jika diperlukan
-                echo "Curl error: " . curl_error($ch);
+                return redirect()->route('admin.villa.edit', ['id' => $id])
+                    ->with(['notif_status' => '0', 'notif' => 'Curl error: ' . curl_error($ch)]);
             } else {
                 // Proses penggantian string hanya jika curl berhasil
                 $fileContents = preg_replace("/(END:VEVENT\s+)(SUMMARY:)/", "END:VEVENT\nBEGIN:VEVENT\nSUMMARY:", $fileContents);
@@ -91,7 +92,7 @@ class CalendarController extends Controller
 
             $data = trim(preg_replace('/\s+/', '', $data_filter));
             $newPhrase = str_replace($text, $array, $data);
-            $json = json_decode($newPhrase);
+            $json = json_decode($newPhrase, true);
 
             if (empty($json) and !empty($newPhrase)) {
                 $newPhrase = str_replace("[{", "", $newPhrase);
