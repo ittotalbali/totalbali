@@ -31,6 +31,14 @@ class CalendarController extends Controller
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0');
 
             $fileContents = curl_exec($ch);
+            // Cek apakah eksekusi curl berhasil
+            if ($fileContents === false) {
+                // Tangani error curl jika diperlukan
+                echo "Curl error: " . curl_error($ch);
+            } else {
+                // Proses penggantian string hanya jika curl berhasil
+                $fileContents = preg_replace("/(END:VEVENT\s+)(SUMMARY:)/", "END:VEVENT\nBEGIN:VEVENT\nSUMMARY:", $fileContents);
+            }
             curl_close($ch);
         } else {
             $file = $request->file('ical');
@@ -105,14 +113,14 @@ class CalendarController extends Controller
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because empty']);
             }
 
-            // 🛠️ FIX bagian pengecekan text (support array atau object)
-            $first = $json[0];
-            if (is_array($first) && isset($first['text'])) {
-                $text = $first['text'];
-            } elseif (is_object($first) && isset($first->text)) {
+            // FIX bagian pengecekan text (support array atau object)
+            $first = $json[0] ?? null;
+            $text = '';
+
+            if (is_object($first) && property_exists($first, 'text')) {
                 $text = $first->text;
-            } else {
-                $text = '';
+            } elseif (is_array($first) && array_key_exists('text', $first)) {
+                $text = $first['text'];
             }
 
             if (!str_contains($text, 'start_date')) {
