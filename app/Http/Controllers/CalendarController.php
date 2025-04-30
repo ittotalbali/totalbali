@@ -95,7 +95,9 @@ class CalendarController extends Controller
                 ',end_date:',
             ];
 
-            $data = trim(preg_replace('/\s+/', '', $data_filter));
+            // $data = trim(preg_replace('/\s+/', '', $data_filter));
+            $data = preg_replace('/[ \t]+/', ' ', $data_filter); // hanya ganti spasi/indentasi berlebih, biarkan newline
+            $data = trim($data);
             $newPhrase = str_replace($text, $array, $data);
             $json = json_decode($newPhrase, true);
 
