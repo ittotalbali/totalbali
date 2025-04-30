@@ -44,6 +44,11 @@ class CalendarController extends Controller
         } else {
             $file = $request->file('ical');
             $fileContents = file_get_contents($file);
+            $fileContents = preg_replace(
+                '/END:VEVENT\s+SUMMARY:/',
+                "END:VEVENT\nBEGIN:VEVENT\nSUMMARY:",
+                $fileContents
+            );
         }
 
         if (empty($fileContents)) {
@@ -92,7 +97,6 @@ class CalendarController extends Controller
 
             $data = trim(preg_replace('/\s+/', '', $data_filter));
             $newPhrase = str_replace($text, $array, $data);
-            file_put_contents(storage_path('logs/ical_debug.json'), $newPhrase);
             $json = json_decode($newPhrase, true);
 
             if (empty($json) and !empty($newPhrase)) {
