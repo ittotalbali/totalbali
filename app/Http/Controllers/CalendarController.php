@@ -72,16 +72,27 @@ class CalendarController extends Controller
         $lines = preg_split("/\r\n|\n|\r/", $content);
         $events = [];
         $event = [];
+        $eventStarted = false; // Tambahkan flag untuk cek jika event valid
 
         foreach ($lines as $line) {
             $line = trim($line);
+
+            if (empty($line)) {
+                continue; // Skip empty lines
+            }
+
             if ($line === 'BEGIN:VEVENT') {
                 $event = ['villa_id' => $villaId, 'created_at' => now(), 'updated_at' => now()];
+                $eventStarted = true;
             } elseif ($line === 'END:VEVENT') {
-                if (!empty($event['start_date']) && !empty($event['end_date'])) {
+                // Pastikan ada data valid untuk event sebelum menambahkannya
+                if ($eventStarted && !empty($event['start_date']) && !empty($event['end_date'])) {
                     $events[] = $event;
+                } else {
+                    \Log::warning('Skipped invalid event: ' . json_encode($event)); // Log event yang gagal
                 }
                 $event = [];
+                $eventStarted = false;
             } elseif (strpos($line, 'DTSTART') === 0) {
                 $event['start_date'] = $this->parseDate($line);
             } elseif (strpos($line, 'DTEND') === 0) {
@@ -95,6 +106,11 @@ class CalendarController extends Controller
             }
         }
 
+        // Debugging output untuk memeriksa isi event
+        if (empty($events)) {
+            \Log::error('No valid events found in iCal', ['content' => $content]); // Log seluruh konten iCal jika tidak ada event
+        }
+
         return $events;
     }
 
@@ -102,7 +118,15 @@ class CalendarController extends Controller
     {
         $parts = explode(':', $line);
         $date = end($parts);
-        return \DateTime::createFromFormat('Ymd', substr($date, 0, 8)) ?: null;
+
+        // Periksa apakah tanggal valid
+        $parsedDate = \DateTime::createFromFormat('Ymd', substr($date, 0, 8));
+
+        if (!$parsedDate) {
+            \Log::error('Invalid date format in iCal', ['line' => $line, 'date' => $date]); // Log jika tanggal invalid
+        }
+
+        return $parsedDate ?: null;
     }
 
     private function redirectFail($id, $message)
