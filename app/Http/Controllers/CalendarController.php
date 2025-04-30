@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Calender;
 use App\Models\Villas;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use DateTime;
 
 class CalendarController extends Controller
 {
@@ -46,10 +46,9 @@ class CalendarController extends Controller
             Villas::where('id', $id)->update(['link_ical' => $request->ical_link]);
 
             return redirect()->route('admin.villa.edit', ['id' => $id])
-                ->with(['notif_status' => '1', 'notif' => 'Import data iCal berhasil.']);
+                ->with(['notif_status' => '1', 'notif' => 'Import data ical succeed.']);
         } catch (\Exception $e) {
-            Log::error("iCal Import Error (Villa ID: $id): " . $e->getMessage());
-            return $this->redirectFail($id, 'Import gagal: ' . $e->getMessage());
+            return $this->redirectFail($id, 'Import failed: ' . $e->getMessage());
         }
     }
 
@@ -101,24 +100,28 @@ class CalendarController extends Controller
                         ];
                     }
                 }
-            } elseif ($inEvent && strpos($line, ':') !== false) {
-                list($key, $value) = explode(':', $line, 2);
-                $event[$key] = $value;
+            } elseif ($inEvent) {
+                if (strpos($line, ':') !== false) {
+                    list($key, $value) = explode(':', $line, 2);
+                    $keyParts = explode(';', $key);
+                    $keyName = $keyParts[0]; // Ambil key tanpa atribut (misal: DTSTART)
+                    $event[$keyName] = $value;
+                }
             }
         }
 
         return $events;
     }
 
-    private function parseICalDate($rawLine)
+    private function parseICalDate($rawDate)
     {
-        $clean = preg_replace('/^DT(?:START|END)(;VALUE=DATE)?[:;]/', '', $rawLine);
-
-        if (strlen($clean) === 8) {
-            return \DateTime::createFromFormat('Ymd', $clean);
+        // Format with time (e.g., 20250430T000000Z)
+        if (preg_match('/^\d{8}T\d{6}Z?$/', $rawDate)) {
+            return new DateTime($rawDate);
         }
 
-        return new \DateTime($clean);
+        // Format date only (e.g., 20250430)
+        return DateTime::createFromFormat('Ymd', $rawDate);
     }
 
     private function redirectFail($id, $message)
