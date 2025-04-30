@@ -92,6 +92,7 @@ class CalendarController extends Controller
 
             $data = trim(preg_replace('/\s+/', '', $data_filter));
             $newPhrase = str_replace($text, $array, $data);
+            file_put_contents(storage_path('logs/ical_debug.json'), $newPhrase);
             $json = json_decode($newPhrase, true);
 
             if (empty($json) and !empty($newPhrase)) {
