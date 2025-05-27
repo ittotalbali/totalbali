@@ -14,6 +14,8 @@ class StoreLocationService implements BaseService
         $location = Location::create([
             'name' => $dto['name'],
             'area_id' => $dto['area_id'],
+            'latitude' => $dto['latitude'],
+            'longitude' => $dto['longitude'],
         ]);
 
         return (object) [
@@ -22,7 +24,8 @@ class StoreLocationService implements BaseService
         ];
     }
 
-    private function prepare ($dto) {
+    private function prepare($dto)
+    {
         return $dto;
     }
 }

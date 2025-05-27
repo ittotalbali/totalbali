@@ -36,6 +36,8 @@ class LocationController extends Controller
         $data["page_title"] = 'Manajemen Locations';
         $data['location'] = $location;
         $data['area'] = $area;
+        $data['latitude'] = $latitude;
+        $data['longitude'] = $longitude;
         return view('admin.location.index', $data);
     }
 
@@ -80,6 +82,8 @@ class LocationController extends Controller
         $object = array(
             'name' => $request->name,
             'area_id' => $request->area_id,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
         );
 
         Location::create($object);
@@ -171,7 +175,7 @@ class LocationController extends Controller
         $current->update($object);
 
         return redirect()->route('admin.location.index')
-        ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
+            ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
     }
 
     /**
@@ -186,6 +190,6 @@ class LocationController extends Controller
         $location = Location::where('id', $id)->firstOrFail();
         $location->delete();
         return redirect()->route('admin.location.index')
-        ->with(['notif_status' => '1', 'notif' => 'Delete data succeed.']);
+            ->with(['notif_status' => '1', 'notif' => 'Delete data succeed.']);
     }
 }
