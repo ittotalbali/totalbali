@@ -71,7 +71,7 @@ Tambah
                             <div class="form-group">
                                 <label for="">Latitude</label>
                                 <input type="text" class="form-control" name="latitude" placeholder=""
-                                    value="{{ @$edit_mode ? $detail->latitude : old('latitude') }}" required>
+                                    value="{{ @$edit_mode ? $detail->latitude : old('latitude') }}">
                                 @error('latitude')
                                 <label id="latitude-error" class="text-danger pl-3"
                                     for="latitude">{{ $message }}</label>
@@ -161,7 +161,7 @@ Tambah
                             <div class="form-group">
                                 <label for="">Latitude</label>
                                 <input type="text" class="form-control" id="editLatitude" name="latitude"
-                                    placeholder="Insert your latitude" value="{{ old('latitude') }}">
+                                    placeholder="Insert latitude" value="{{ old('latitude') }}">
                                 @error('latitude')
                                 <label id="latitude-error" class="text-danger pl-3"
                                     for="latitude">{{ $message }}</label>
@@ -173,7 +173,7 @@ Tambah
                             <div class="form-group">
                                 <label for="">Longitude</label>
                                 <input type="text" class="form-control" id="editLongitude" name="longitude"
-                                    placeholder="Insert your longitude" value="{{ old('longitude') }}">
+                                    placeholder="Insert longitude" value="{{ old('longitude') }}">
                                 @error('longitude')
                                 <label id="longitude-error" class="text-danger pl-3"
                                     for="longitude">{{ $message }}</label>
