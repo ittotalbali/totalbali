@@ -36,8 +36,6 @@ class LocationController extends Controller
         $data["page_title"] = 'Manajemen Locations';
         $data['location'] = $location;
         $data['area'] = $area;
-        $data['latitude'] = $latitude;
-        $data['longitude'] = $longitude;
         return view('admin.location.index', $data);
     }
 
@@ -68,8 +66,6 @@ class LocationController extends Controller
         $rules = array(
             'name' => 'required',
             'area_id' => 'required',
-            'latitude' => 'required',
-            'longitude' => 'required',
         );
         $validator = Validator::make($request->all(), $rules,  $messages = [
             'required' => 'The :attribute field is required.',
