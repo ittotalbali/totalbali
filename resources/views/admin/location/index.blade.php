@@ -156,6 +156,30 @@ Tambah
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Latitude</label>
+                                <input type="text" class="form-control" id="editLatitude" name="latitude"
+                                    placeholder="Insert your latitude" value="{{ old('latitude') }}">
+                                @error('latitude')
+                                <label id="latitude-error" class="text-danger pl-3"
+                                    for="latitude">{{ $message }}</label>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Longitude</label>
+                                <input type="text" class="form-control" id="editLongitude" name="longitude"
+                                    placeholder="Insert your longitude" value="{{ old('longitude') }}">
+                                @error('longitude')
+                                <label id="longitude-error" class="text-danger pl-3"
+                                    for="longitude">{{ $message }}</label>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <input type="hidden" id="editmethod" name="_method" value="">
