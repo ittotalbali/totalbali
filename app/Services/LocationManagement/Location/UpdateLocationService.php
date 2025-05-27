@@ -13,12 +13,14 @@ class UpdateLocationService implements BaseService
 
         $location = Location::where('id', $dto['location_id'])->first();
 
-        if ( $location  == null )
-        throw new \Exception("Location Not Found", 404);
+        if ($location  == null)
+            throw new \Exception("Location Not Found", 404);
 
         $location->update([
             "name" => $dto['name'] ?? $location->name,
             "area_id" => $dto['area_id'] ?? $location->area_id,
+            "latitude" => $dto['latitude'] ?? $location->latitude,
+            "longitude" => $dto['longitude'] ?? $location->longitude,
         ]);
 
         return (object) [
@@ -27,7 +29,8 @@ class UpdateLocationService implements BaseService
         ];
     }
 
-    private function prepare ($dto) {
+    private function prepare($dto)
+    {
         return $dto;
     }
 }

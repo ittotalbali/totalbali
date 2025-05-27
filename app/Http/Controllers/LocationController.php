@@ -68,6 +68,8 @@ class LocationController extends Controller
         $rules = array(
             'name' => 'required',
             'area_id' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
         );
         $validator = Validator::make($request->all(), $rules,  $messages = [
             'required' => 'The :attribute field is required.',
@@ -154,6 +156,8 @@ class LocationController extends Controller
         $rules = array(
             'name' => 'required',
             'area_id' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
         );
         // dd($rules);
         $validator = Validator::make($request->all(), $rules, $messages = [
@@ -169,6 +173,8 @@ class LocationController extends Controller
         $object = array(
             'name' => $request->name,
             'area_id' => $request->area_id,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
         );
 
         $current = Location::findOrFail($id);
