@@ -58,7 +58,7 @@
                         <div class="form-group">
                             <label>Latitude</label>
                             <input type="text" class="form-control  @error('latitude') is-invalid @enderror"
-                                placeholder="Insert your latitude" name="latitude"
+                                placeholder="Insert latitude" name="latitude"
                                 value="{{ @$edit_mode ? $location->latitude : old('latitude') }}">
                             @error('latitude')
                             <label id="latitude-error" class="text-danger pl-3" for="latitude">{{ $message }}</label>
@@ -67,7 +67,7 @@
                         <div class="form-group">
                             <label>Longitude</label>
                             <input type="text" class="form-control  @error('longitude') is-invalid @enderror"
-                                placeholder="Insert your longitude" name="longitude"
+                                placeholder="Insert longitude" name="longitude"
                                 value="{{ @$edit_mode ? $location->longitude : old('longitude') }}">
                             @error('longitude')
                             <label id="longitude-error" class="text-danger pl-3" for="longitude">{{ $message }}</label>

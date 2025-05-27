@@ -18,6 +18,6 @@ class Location extends Model
 
     public function area()
     {
-        return $this->hasOne(Areas::class, 'id', 'area_id', 'latitude', 'longitude');
+        return $this->hasOne(Areas::class, 'id', 'area_id');
     }
 }
