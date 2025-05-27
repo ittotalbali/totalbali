@@ -12,10 +12,12 @@ class Location extends Model
     protected $fillable = [
         'name',
         'area_id',
+        'latitude',
+        'longitude',
     ];
 
     public function area()
     {
-        return $this->hasOne(Areas::class, 'id', 'area_id');
+        return $this->hasOne(Areas::class, 'id', 'area_id', 'latitude', 'longitude');
     }
 }
