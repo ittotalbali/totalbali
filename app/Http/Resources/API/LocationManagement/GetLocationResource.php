@@ -18,6 +18,8 @@ class GetLocationResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'area_id' => $this->area_id,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
         ];
     }
 }
