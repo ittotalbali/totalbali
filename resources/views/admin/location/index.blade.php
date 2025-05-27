@@ -244,8 +244,6 @@ Tambah
                                 <th>No</th>
                                 <th>Name</th>
                                 <th>Area</th>
-                                <th>Latitude</th>
-                                <th>Longitude</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -255,8 +253,6 @@ Tambah
                             <tr>
                                 <td>{{ $i++ }}</td>
                                 <td>{{ $item->name }}</td>
-                                <td>{{ $item->latitude }}</td>
-                                <td>{{ $item->longitude }}</td>
                                 <td>{{ $item->area->name }}</td>
                                 <td>
                                     @can('area-edit')
