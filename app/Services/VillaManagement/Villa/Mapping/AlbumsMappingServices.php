@@ -26,7 +26,7 @@ class AlbumsMappingServices implements BaseService
 
         return (object) [
             'success' => true,
-            'albums' => $galeries,
+            'data' => $galeries,
         ];
     }
 }
