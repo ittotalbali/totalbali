@@ -21,7 +21,7 @@ class GetVillaResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            // 'name' => $this->name,
             'code' => $this->code,
             'area' => $this->area->name ?? null,
             'location' => $this->location->name ?? null,
@@ -37,7 +37,7 @@ class GetVillaResource extends JsonResource
             'longitude' => $this->cor_long,
             // 'map_url' => $this->link_map,
             'wedding_villa' => $data['wedding_villa'],
-            'galeries' => $data['galeries'],
+            // 'galeries' => $data['galeries'],
             'albums' => $data['albums'],
             'villa_bvp' => $this->villa_bvp,
         ];

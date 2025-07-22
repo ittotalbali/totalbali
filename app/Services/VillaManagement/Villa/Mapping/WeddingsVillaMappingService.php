@@ -26,10 +26,10 @@ class WeddingsVillaMappingService implements BaseService
             $data = [
                 'standing_guests' => $wedding->standing_guests,
                 'seated_guests' => $wedding->seated_guests,
-                'ocean_views' => $wedding->ocean_views,
-                'garden_weddings' => $wedding->garden_weddings,
-                'beachfront' => $wedding->beachfront,
-                'other' => $wedding->other,
+                // 'ocean_views' => $wedding->ocean_views,
+                // 'garden_weddings' => $wedding->garden_weddings,
+                // 'beachfront' => $wedding->beachfront,
+                // 'other' => $wedding->other,
             ];
         }
 
