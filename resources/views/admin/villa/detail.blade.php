@@ -138,27 +138,27 @@
                             </tr>
                             <tr>
                                 <td>Short Description</td>
-                                <td>{{ $edit->short }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->short }}</td>
                             </tr>
                             <tr>
                                 <td>Long Description</td>
-                                <td>{!! $edit->long !!}</td>
+                                <td style="white-space: normal; word-break: break-word;">{!! $edit->long !!}</td>
                             </tr>
                             <tr>
                                 <td>Old Link</td>
-                                <td>{{ $edit->old_link }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->old_link }}</td>
                             </tr>
                             <tr>
                                 <td>Website</td>
-                                <td>{{ $edit->new_link }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->new_link }}</td>
                             </tr>
                             <tr>
                                 <td>Airbnb Link</td>
-                                <td>{{ $edit->airbnb_link }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->airbnb_link }}</td>
                             </tr>
                             <tr>
                                 <td>Booking.com Link</td>
-                                <td>{{ $edit->bookingcom_link }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->bookingcom_link }}</td>
                             </tr>
                             <tr>
                                 <td>Galeries</td>
@@ -201,7 +201,7 @@
                             <tr>
                                 <td>Bedroom</td>
                                 <td class="p-0">
-                                    <table class="table table-bordered" style="">
+                                    <table class="table table-bordered" style="width:auto;">
                                         <tr>
                                             <td>Type Of Bedroom</td>
                                             <td>Number Of Bedroom</td>
@@ -225,7 +225,7 @@
                             <tr>
                                 <td>Inclusions</td>
                                 <td class="p-0">
-                                    <table class="table table-bordered" style="">
+                                    <table class="table table-bordered" style="width:auto;">
                                         <tr>
                                             <td>Type</td>
                                             <td>Breakfast</td>
@@ -242,10 +242,10 @@
                                         </tr>
                                         <tr>
                                             <td>Description</td>
-                                            <td>{{ $edit->inclusions->breakfast_description }}</td>
-                                            <td>{{ $edit->inclusions->airport_description }}</td>
-                                            <td>{{ $edit->inclusions->pijet_description }}</td>
-                                            <td>{{ $edit->inclusions->anything_else_description }}</td>
+                                            <td style=" white-space: normal; word-break: break-word;">{{ $edit->inclusions->breakfast_description }}</td>
+                                            <td style=" white-space: normal; word-break: break-word;">{{ $edit->inclusions->airport_description }}</td>
+                                            <td style=" white-space: normal; word-break: break-word;">{{ $edit->inclusions->pijet_description }}</td>
+                                            <td style=" white-space: normal; word-break: break-word;">{{ $edit->inclusions->anything_else_description }}</td>
                                         </tr>
                                     </table>
                                 </td>
@@ -285,16 +285,16 @@
                             <tr>
                                 <td>Chef</td>
                                 <td class="p-0">
-                                    <table class="table table-bordered" style="">
+                                    <table class="table table-bordered" style="width:auto;">
                                         <tr>
-                                            <td width="20%">Status</td>
-                                            <td width="20%">Cost</td>
+                                            <td>Status</td>
+                                            <td>Cost</td>
                                             <td>Information</td>
                                         </tr>
                                         <tr>
                                             <td>{{ $edit->chef->chef   }}</td>
                                             <td>{{ number_format($edit->chef->cost) }}</td>
-                                            <td>{{ $edit->chef->information }}</td>
+                                            <td>{!! $edit->chef->information !!}</td>
                                         </tr>
                                     </table>
                                 </td>
@@ -304,10 +304,10 @@
                             <tr>
                                 <td>Car And Driver</td>
                                 <td class="p-0">
-                                    <table class="table table-bordered" style="">
+                                    <table class="table table-bordered" style="width:auto;">
                                         <tr>
-                                            <td width="20%">{{ $edit->car->system_for_use }}</td>
-                                            <td width="20%">{{ number_format($edit->car->cost) }}</td>
+                                            <td>{{ $edit->car->system_for_use }}</td>
+                                            <td>{{ number_format($edit->car->cost) }}</td>
                                             <td>{{ $edit->car->information }}</td>
                                         </tr>
                                     </table>
@@ -317,7 +317,7 @@
                             <tr>
                                 <td>Album</td>
                                 <td class="p-0">
-                                    <table class="table table-bordered" style="">
+                                    <table class="table table-bordered" style="width:auto;">
                                         @foreach ($edit->album as $key_al => $item_al)
                                         <tr>
                                             <td>{{ $item_al->nama }}</td>
@@ -341,7 +341,7 @@
                             <tr>
                                 <td>Floorplan</td>
                                 <td class="p-0">
-                                    <table class="table table-bordered" style="">
+                                    <table class="table table-bordered" style="width:auto;">
                                         <tr>
                                             <td colspan="2">{{ $edit->floorplan->nama }}</td>
                                         </tr>
@@ -480,35 +480,35 @@
                             </tr>
                             <tr>
                                 <td>Montain View</td>
-                                <td>{{ $edit->mountain->mountain_view }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->mountain->mountain_view }}</td>
                             </tr>
                             <tr>
                                 <td>View Of Recifield</td>
-                                <td>{{ $edit->mountain->view_of_ricefield }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->mountain->view_of_ricefield }}</td>
                             </tr>
                             <tr>
                                 <td>Rover Closeby</td>
-                                <td>{{ $edit->mountain->river_closeby }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->mountain->river_closeby }}</td>
                             </tr>
                             <tr>
                                 <td>Waterfall Closeby</td>
-                                <td>{{ $edit->mountain->waterfall_closeby }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->mountain->waterfall_closeby }}</td>
                             </tr>
                             <tr>
                                 <td>Activities</td>
-                                <td>{{ $edit->mountain->activities }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->mountain->activities }}</td>
                             </tr>
                             <tr>
                                 <td>Track Information</td>
-                                <td>{{ $edit->mountain->track_information }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->mountain->track_information }}</td>
                             </tr>
                             <tr>
                                 <td>Birdwatching</td>
-                                <td>{{ $edit->mountain->birdwatching }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->mountain->birdwatching }}</td>
                             </tr>
                             <tr>
                                 <td>Guide</td>
-                                <td>{{ $edit->mountain->guide }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->mountain->guide }}</td>
                             </tr>
                             @endif
                             @if ($edit->close_clubs->count() > 0)
@@ -536,19 +536,19 @@
                             </tr>
                             <tr>
                                 <td>Pool Fence</td>
-                                <td>{{ $edit->family->pool_fence }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->family->pool_fence }}</td>
                             </tr>
                             <tr>
                                 <td>Baby Cot</td>
-                                <td>{{ $edit->family->baby_cot }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->family->baby_cot }}</td>
                             </tr>
                             <tr>
                                 <td>Infant Cot</td>
-                                <td>{{ $edit->family->infant_cot }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->family->infant_cot }}</td>
                             </tr>
                             <tr>
                                 <td>Baby High Chair</td>
-                                <td>{{ $edit->family->baby_high_chair }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->family->baby_high_chair }}</td>
                             </tr>
                             <tr>
                                 <td>Chef</td>
@@ -577,15 +577,15 @@
                             </tr>
                             <tr>
                                 <td>What Beach</td>
-                                <td>{{ $edit->beach->what_beach }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->beach->what_beach }}</td>
                             </tr>
                             <tr>
                                 <td>How Far Walking</td>
-                                <td>{{ $edit->beach->how_far_walking }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->beach->how_far_walking }}</td>
                             </tr>
                             <tr>
                                 <td>Views Of Ocean</td>
-                                <td>{{ $edit->beach->views_of_ocean }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->beach->views_of_ocean }}</td>
                             </tr>
                             <tr>
                                 <td>Surf Villa</td>
@@ -593,15 +593,15 @@
                             </tr>
                             <tr>
                                 <td>Waves Nearby</td>
-                                <td>{{ $edit->beach->waves_nearby }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->beach->waves_nearby }}</td>
                             </tr>
                             <tr>
                                 <td>Extra Information</td>
-                                <td>{{ $edit->beach->extra_information }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->beach->extra_information }}</td>
                             </tr>
                             <tr>
                                 <td>Other Information</td>
-                                <td>{{ $edit->beach->other_information }}</td>
+                                <td style="white-space: normal; word-break: break-word;">{{ $edit->beach->other_information }}</td>
                             </tr>
                             @endif
                             @if ($edit->rate->count() > 0)
@@ -612,12 +612,12 @@
                             <tr>
                                 <td>{{ ucwords(str_replace('_', ' ', $rate->type)) }}</td>
                                 <td class="p-0">
-                                    <table class="table table-bordered" style="">
+                                    <table class="table table-bordered" style="width:auto;">
                                         <tr>
-                                            <td width="20%">Details</td>
-                                            <td width="20%">Price</td>
-                                            <td width="20%">Start Date</td>
-                                            <td width="20%">End Date</td>
+                                            <td>Details</td>
+                                            <td>Price</td>
+                                            <td>Start Date</td>
+                                            <td>End Date</td>
                                         </tr>
                                         <tr>
                                             <td>{!! $rate->details !!}</td>
