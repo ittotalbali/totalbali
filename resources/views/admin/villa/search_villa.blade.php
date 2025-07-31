@@ -153,9 +153,11 @@
                             <th>Bedrooms</th>
                             <th>Bathrooms</th>
                             <th>Base rate</th>
-                            <th>Monthly</th>
+                            <!-- <th>Monthly</th>
                             <th>Yearly</th>
-                            <th>Sales</th>
+                            <th>Sales</th> -->
+                            <th>WA</th>
+                            <th>Email</th>
                             <th>Maps</th>
                             <th>Airbnb</th>
                             <th>Booking.com</th>
@@ -180,19 +182,68 @@
                             <td>{{ $item->bedroom }}</td>
                             <td>{{ $item->bathroom }}</td>
                             <td>{{ $item->base_rate_currency . ' ' . number_format($item->base_rate) }}</td>
-                            <td>{!! $item->pricing->monthly_description ?? 'N/A' !!}</td>
+                            <!-- <td>{!! $item->pricing->monthly_description ?? 'N/A' !!}</td>
                             <td>{!! $item->pricing->yearly_description ?? 'N/A' !!}</td>
-                            <td>{!! $item->pricing->available_for_sales_description ?? 'N/A' !!}</td>
-                            <td><a href="{{ $item->link_map }}" class="redirect-url"><i data-feather="map-pin"></i></a></td>
-                            <td><a href="{{ $item->airbnb_link }}" class="redirect-url"><i class="bg-danger text-white" data-feather="link"></i></a></td>
-                            <td><a href="{{ $item->bookingcom_link }}" class="redirect-url"><i class="bg-primary text-white" data-feather="link"></i></a></td>
-                            <td><a href="{{ $item->old_link }}" class="redirect-url"><i class="bg-secondary text-white" data-feather="link"></i></a></td>
+                            <td>{!! $item->pricing->available_for_sales_description ?? 'N/A' !!}</td> -->
+                            {{-- WhatsApp --}}
+                            <td style="text-align: center;">
+                                @if(!empty($item->whatsapp))
+                                <a href="https://wa.me/{{ preg_replace('/^0/', '62', $item->whatsapp) }}" target="_blank" class="redirect-url">
+                                    <i class="fab fa-whatsapp text-success"></i>
+                                </a>
+                                @endif
+                            </td>
+
+                            {{-- Email --}}
+                            <td style="text-align: center;">
+                                @if(!empty($item->email))
+                                <a href="mailto:{{ $item->email }}" class="redirect-url">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                                @endif
+                            </td>
+
+                            {{-- Google Maps --}}
+                            <td style="text-align: center;">
+                                @if(!empty($item->link_map))
+                                <a href="{{ $item->link_map }}" class="redirect-url">
+                                    <i data-feather="map-pin"></i>
+                                </a>
+                                @endif
+                            </td>
+
+                            {{-- Airbnb --}}
+                            <td style="text-align: center;">
+                                @if(!empty($item->airbnb_link))
+                                <a href="{{ $item->airbnb_link }}" class="redirect-url">
+                                    <i class="bg-danger text-white" data-feather="link"></i>
+                                </a>
+                                @endif
+                            </td>
+
+                            {{-- Booking.com --}}
+                            <td style="text-align: center;">
+                                @if(!empty($item->bookingcom_link))
+                                <a href="{{ $item->bookingcom_link }}" class="redirect-url">
+                                    <i class="bg-primary text-white" data-feather="link"></i>
+                                </a>
+                                @endif
+                            </td>
+
+                            {{-- Old Link --}}
+                            <td style="text-align: center;">
+                                @if(!empty($item->old_link))
+                                <a href="{{ $item->old_link }}" class="redirect-url">
+                                    <i class="bg-secondary text-white" data-feather="link"></i>
+                                </a>
+                                @endif
+                            </td>
                             <td>
-                                @can('detail-search')
+
                                 <a href="{{ route('admin.villa.detail',  $item->id) }}">
                                     <button class="btn btn-sm btn-primary">Detail</button>
                                 </a>
-                                @endcan
+
                                 <a href="{{ route('admin.villa.edit', ['id' => $item->id]) }}">
                                     <button class="btn btn-sm btn-outline-success">Edit</button>
                                 </a>
