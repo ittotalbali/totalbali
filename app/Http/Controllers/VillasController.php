@@ -89,7 +89,7 @@ class VillasController extends Controller
         // dd($villa->toArray());
 
         $user = Auth::user();
-        
+
         $villa = $getVillaService->execute([
             // 'user_id' => $user->roles[0]->name == 'super_admin' ? null : $user->id,
             // 'limit' => 100 // dev only
@@ -100,10 +100,10 @@ class VillasController extends Controller
 
         return view('admin.villa.index', $data);
     }
-    
-     //rino
+
+    //rino
     public function genrate(GetVillaService $getVillaService)
-    {        
+    {
         $villa = $getVillaService->execute()->data;
         $rate = Rates::all();
         $data["page_title"] = 'Manajemen Villa';
@@ -192,10 +192,10 @@ class VillasController extends Controller
             $statusPost = 'draft';
         }
 
-        if(!empty($request->sub_location_id) and !empty($request->location_id)) {
+        if (!empty($request->sub_location_id) and !empty($request->location_id)) {
             $bedroom = $request->bedroom ?? 0;
             $bathroom = $request->bathroom ?? 0;
-    
+
             $location = Location::find($request->location_id);
             // $sub_location = SubLocation::find($request->sub_location_id);
             // $sub_location_villa_count = Villas::where('sub_location_id', $request->sub_location_id)->count() + 1;
@@ -204,14 +204,15 @@ class VillasController extends Controller
             $villa_codes = Villas::where('location_id', $request->location_id)->pluck('code')->toArray();
             $counters = [];
 
-            foreach($villa_codes as $villa_code) {
+            foreach ($villa_codes as $villa_code) {
                 $counters[] = substr($villa_code, -3);
             }
 
             $last_count = max($counters) + 1;
             $formatted_villa_count = str_pad($last_count, 3, '0', STR_PAD_LEFT);
-    
+
             $code = $location->name . '-' . $bedroom . $bathroom . $formatted_villa_count;
+            $slug = $location->name . '-' . $bedroom . 'Bedroom';
         }
 
         $villaId = Villas::insertGetId([
@@ -258,6 +259,9 @@ class VillasController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
             'villa_bvp' => $request->villa_bvp,
+            'slug' => $slug,
+            'whatsapp' => $request->whatsapp,
+            'email' => $request->email,
         ]);
         $current = Villas::findOrFail($villaId);
         $current->facilities()->attach($request->faciliti);
@@ -279,7 +283,7 @@ class VillasController extends Controller
         $getIdBedroom = [];
         if ($request->number_of_bedroom != null) {
             foreach ($request->number_of_bedroom as $key => $value) {
-                
+
                 $data_bedroom = [
                     'number_of_bedrooms' => $request->number_of_bedroom[$key],
                     'type_of_bedroom' => $request->type_of_bedroom[$key],
@@ -308,7 +312,7 @@ class VillasController extends Controller
                 $input_album['thumbnail'] = 0;
                 $input_album['id_villa'] = $villaId;
                 $input_album['album_category_id'] = $request->album_category[$key];
-               
+
                 $album_id = Album::insertGetId($input_album);
                 if ($request->image_album != null) {
                     foreach ($request->image_album[$key] as $index => $image) {
@@ -328,7 +332,7 @@ class VillasController extends Controller
                 }
             }
         }
-        
+
 
         if ($request->nama_floorplan != null) {
             $data_floorplan = [
@@ -531,7 +535,7 @@ class VillasController extends Controller
         return redirect()->route('admin.villa.index')->with(['notif_status' => '1', 'notif' => 'Post Draft data succeed.']);
     }
 
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -689,15 +693,34 @@ class VillasController extends Controller
     public function show(Villas $villas, $id)
     {
         $villa = Villas::with([
-            'countries', 'area', 'location', 'galeries', 'sublocation', 'pool','facilities','rate',
+            'countries',
+            'area',
+            'location',
+            'galeries',
+            'sublocation',
+            'pool',
+            'facilities',
+            'rate',
             'bedrooms' => function ($query) {
                 return $query->with('bathrooms');
-            }, 'inclusions', 'retreats', 'wedding', 'mountain', 'close_clubs', 'family', 'beach', 'staff_new', 'chef', 'car',
+            },
+            'inclusions',
+            'retreats',
+            'wedding',
+            'mountain',
+            'close_clubs',
+            'family',
+            'beach',
+            'staff_new',
+            'chef',
+            'car',
             'album' => function ($query) {
                 return $query->with('galeri_album');
-            },  'floorplan' => function ($query) {
+            },
+            'floorplan' => function ($query) {
                 return $query->with('galeri_floorplan');
-            }, 'pricing'
+            },
+            'pricing'
         ])->findorfail($id);
         // dd($villa->toArray());
         $data['edit'] = $villa;
@@ -724,7 +747,7 @@ class VillasController extends Controller
                 $bgColor = 'rgb(23,162,184, 50%)';
             } else if ($value->type == 'peak') {
                 $bgColor = 'rgb(255,0,0, 50%)';
-            //belum ganti warna
+                //belum ganti warna
             } else if ($value->type == 'special_rate') {
                 $bgColor = 'rgb(255,0,0, 50%)';
             } else if ($value->type == 'peak_sesion') {
@@ -763,15 +786,32 @@ class VillasController extends Controller
         $countries = Countries::all();
         $country = Countries::all();
         $villa = Villas::with([
-            'countries', 'area', 'location', 'galeries', 'sublocation', 'pool',
+            'countries',
+            'area',
+            'location',
+            'galeries',
+            'sublocation',
+            'pool',
             'bedrooms' => function ($query) {
                 return $query->with('bathrooms');
-            }, 'inclusions', 'retreats', 'wedding', 'mountain', 'close_clubs', 'family', 'beach', 'staff_new', 'chef', 'car',
+            },
+            'inclusions',
+            'retreats',
+            'wedding',
+            'mountain',
+            'close_clubs',
+            'family',
+            'beach',
+            'staff_new',
+            'chef',
+            'car',
             'album' => function ($query) {
                 return $query->with('galeri_album');
-            },  'floorplan' => function ($query) {
+            },
+            'floorplan' => function ($query) {
                 return $query->with('galeri_floorplan');
-            }, 'pricing'
+            },
+            'pricing'
         ])->findorfail($id);
         //  dd($villa->toArray());
         $area = Areas::where('country_id', $villa->country_id)->get();
@@ -790,7 +830,7 @@ class VillasController extends Controller
         $facility = Facilities_villas::where('villa_id', $id)->get();
         // dd($villa->toArray());
 
-        
+
         $pool = Pool::where('id_villa', $id)->first();
         $bedroom = bedroom::where('id_villa', $id)->with('bathroom')->get();
         $inclusions = Inclusions::where('id_villa', $id)->get();
@@ -845,11 +885,11 @@ class VillasController extends Controller
         $data['countries'] = $countries;
         $data['area'] = $area;
         $data['rate_base'] = $rate_base;
-        $data['rate_low_season'] =$rate_low_season;
-        $data['rate_high_season'] =$rate_high_season;
-        $data['rate_special_rate'] =$rate_special_rate;
-        $data['rate_shoulder_season'] =$rate_shoulder_season;
-        $data['rate_peak_season'] =$rate_peak_season;
+        $data['rate_low_season'] = $rate_low_season;
+        $data['rate_high_season'] = $rate_high_season;
+        $data['rate_special_rate'] = $rate_special_rate;
+        $data['rate_shoulder_season'] = $rate_shoulder_season;
+        $data['rate_peak_season'] = $rate_peak_season;
         //rate
         $data['rate_low'] = $rate_low;
         $data['rate_high'] = $rate_high;
@@ -942,7 +982,7 @@ class VillasController extends Controller
         }
 
         // Generate villa code
-        if(!empty($request->sub_location_id) and !empty($request->location_id)) { // used empty($request->code) filter before
+        if (!empty($request->sub_location_id) and !empty($request->location_id)) { // used empty($request->code) filter before
             $bedroom = $request->bedroom ?? 0;
             $bathroom = $request->bathroom ?? 0;
 
@@ -952,32 +992,33 @@ class VillasController extends Controller
             // $formatted_villa_count = str_pad($sub_location_villa_count, 3, '0', STR_PAD_LEFT);
 
             $villa_codes = Villas::where('location_id', $request->location_id)
-            ->where('id', '!=', $id)
-            ->pluck('code')->toArray();
+                ->where('id', '!=', $id)
+                ->pluck('code')->toArray();
             $counters = [];
 
-            foreach($villa_codes as $villa_code) {
+            foreach ($villa_codes as $villa_code) {
                 $counters[] = substr($villa_code, -3);
             }
 
             $current_counter = substr($request->code, -3);
             $current_counter_occurence = array_count_values($counters)[$current_counter] ?? 0;
 
-            if($current_counter_occurence == 0) {
+            if ($current_counter_occurence == 0) {
                 $current_location_id = Villas::find($id)->location_id;
 
-                if($current_location_id != $request->location_id) {
+                if ($current_location_id != $request->location_id) {
                     $last_count = max($counters) + 1;
                     $formatted_villa_count = str_pad($last_count, 3, '0', STR_PAD_LEFT);
-                }else {
+                } else {
                     $formatted_villa_count = $current_counter;
                 }
-            }else {
+            } else {
                 $last_count = max($counters) + 1;
                 $formatted_villa_count = str_pad($last_count, 3, '0', STR_PAD_LEFT);
             }
-    
+
             $code = $location->name . '-' . $bedroom . $bathroom . $formatted_villa_count;
+            $slug = $location->name . '-' . $bedroom . 'Bedroom';
         }
         // else {
         //     $bedroom = $request->bedroom ?? 0;
@@ -1035,6 +1076,9 @@ class VillasController extends Controller
             'status' => $statusPost,
             // 'link_ical' => $request->link_ical,
             'villa_bvp' => $request->villa_bvp,
+            'slug' => $slug,
+            'whatsapp' => $request->whatsapp,
+            'email' => $request->email,
         );
 
         $villa = Villas::findOrFail($id);
@@ -1084,14 +1128,14 @@ class VillasController extends Controller
             $request->number_of_bedroom_edit ||
             $request->type_of_bedroom_edit ||
             $request->people_can_stay_per_room_edit != null
-           
+
         ) {
             foreach ($request->number_of_bedroom_edit as $key => $value) {
                 $data_bedroom = [
                     'number_of_bedrooms' => $request->number_of_bedroom_edit[$key],
                     'type_of_bedroom' => $request->type_of_bedroom_edit[$key],
                     'people_can_stay_per_room' => $request->people_can_stay_per_room_edit[$key],
-                    
+
                     'id_villa' => $id, // Replace with the appropriate villa ID
                 ];
                 $idBedroomEdit[] = $key;
@@ -1116,7 +1160,7 @@ class VillasController extends Controller
             $request->number_of_bedroom &&
             $request->type_of_bedroom &&
             $request->people_can_stay_per_room != null
-            
+
         ) {
             // return $request->number_of_bedroom;
             foreach ($request->number_of_bedroom as $key => $value) {
@@ -1150,14 +1194,14 @@ class VillasController extends Controller
                 $input_album['thumbnail'] = 0;
                 $input_album['id_villa'] = $id;
                 $input_album['album_category_id'] = $request->album_category[$key];
-                
+
                 $album_id = Album::insertGetId($input_album);
                 if ($request->image_album != null) {
                     foreach ($request->image_album[$key] as $index => $image) {
                         if ($image->getSize() > 500000) {
                             return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
                         }
-                        
+
                         $image = Storage::disk('uploads')->put('galeri_album', $image);
                         $galery_album['album_id'] = $album_id;
                         $galery_album['villa_id'] = $id;
@@ -1193,7 +1237,7 @@ class VillasController extends Controller
                             }
 
                             $galery = Galeri::findOrFail($keyEdit);
-                            
+
                             if ($galery->image) {
                                 File::delete('./uploads/' . $galery->image);
                             }
@@ -1207,7 +1251,7 @@ class VillasController extends Controller
                         }
                         $edit_image[$keyEdit] = $keyEdit;
                     }
-                }else if(!empty($request->galeri_album_edit)) {
+                } else if (!empty($request->galeri_album_edit)) {
                     foreach ($request->galeri_album_edit as $keyEdit => $galeri) {
                         $galery = Galeri::findOrFail($keyEdit);
                         $object['title'] = $request->title_album_edit[$keyEdit];
@@ -1216,7 +1260,7 @@ class VillasController extends Controller
                         $galery->update($object);
                     }
                 }
-                
+
                 if ($request->hasfile('image_album.' . $key)) {
                     foreach ($request->file('image_album.' . $key) as $keyNew => $value) {
                         if ($value->getSize() > 500000) {
@@ -1245,7 +1289,7 @@ class VillasController extends Controller
                 'id_villa' => $id,
             ];
             Pool::insert($data_pool);
-        }else {
+        } else {
             $data_pool = [
                 'pool' => $request->pool_edit,
                 'type' => $request->type_edit,
@@ -1263,85 +1307,86 @@ class VillasController extends Controller
                 'id_villa' => $id,
             ];
             $idAlbumFloorplan = Floorplan::insertGetId($data_floorplan);
-        if ($request->hasfile('image_floorplan')) {
-            foreach ($request->file('image_floorplan') as $key => $value) {
-                if ($value->getSize() > 500000) {
-                    return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
-                }
-
-                $image = Storage::disk('uploads')->put('galeri_floorplan',$value);
-                $input['gambar'] = $image;
-                $input['deskripsi'] = $request->deskripsi_floorplan[$key];
-                $input['id_floorplan'] = $idAlbumFloorplan;
-                $input['id_villa'] = $id;
-                GambarFloorplan::create($input);
-            }
-        }
-    }
-    if ($request->nama_floorplan_edit != null || $request->deskripsi_edit != null) {
-        $data_floorplan = [
-            'nama' => $request->nama_floorplan_edit,
-            'deskripsi' => $request->deskripsi_edit,
-            'id_villa' => $id,
-        ];
-        // Update data floorplan berdasarkan floorplan_id
-        Floorplan::where('id', $request->floorplan_id)->update($data_floorplan);
-    
-        if ($request->hasfile('image_floorplan_edit')) {
-            $images = $request->file('image_floorplan_edit');
-            foreach ($images as $key => $image) {
-                if ($image->isValid()) {
-                    if ($image->getSize() > 500000) {
-                        return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
-                    }
-                    
-                    // Simpan gambar ke storage
-                    $image = Storage::disk('uploads')->put('galeri_floorplan', $image);
-    
-                    // Persiapkan data untuk GambarFloorplan baru atau update
-                    $object_gal = [
-                        'gambar' => $image,
-                        'deskripsi' => $request->deskripsi_floorplan_edit[$key],
-                    ];
-    
-                    // Ambil atau buat record GambarFloorplan sesuai $key (id)
-                    $gallery = GambarFloorplan::findOrNew($key);
-                    $gallery->fill($object_gal);
-                    $gallery->id_floorplan = $request->floorplan_id; // Hubungkan dengan floorplan yang benar
-                    $gallery->id_villa = $id;
-                    
-    
-                    // Hapus gambar lama jika ada
-                    if ($gallery->gambar && Storage::disk('uploads')->exists($gallery->gambar)) {
-                        Storage::disk('uploads')->delete($gallery->gambar);
-                    }
-                } else { }
-                $edit_image[$key] = $key;
-                $a[] = $key;
-            }
-            // dd($a);
-        }
-        if ($request->hasfile('new_image_floorplan')) {
-            foreach ($request->file('new_image_floorplan') as $key => $image) {
-                if ($image->isValid()) {
-                    if ($image->getSize() > 500000) {
+            if ($request->hasfile('image_floorplan')) {
+                foreach ($request->file('image_floorplan') as $key => $value) {
+                    if ($value->getSize() > 500000) {
                         return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
                     }
 
-                    $imagePath = Storage::disk('uploads')->put('galeri_floorplan', $image);
-    
-                    $newGalleryData = [
-                        'gambar' => $imagePath,
-                        'deskripsi' => $request->new_deskripsi_floorplan[$key],
-                        'id_floorplan' => $request->floorplan_id,
-                        'id_villa' => $id,
-                    ];
-    
-                    GambarFloorplan::create($newGalleryData);
+                    $image = Storage::disk('uploads')->put('galeri_floorplan', $value);
+                    $input['gambar'] = $image;
+                    $input['deskripsi'] = $request->deskripsi_floorplan[$key];
+                    $input['id_floorplan'] = $idAlbumFloorplan;
+                    $input['id_villa'] = $id;
+                    GambarFloorplan::create($input);
                 }
             }
         }
-    }
+        if ($request->nama_floorplan_edit != null || $request->deskripsi_edit != null) {
+            $data_floorplan = [
+                'nama' => $request->nama_floorplan_edit,
+                'deskripsi' => $request->deskripsi_edit,
+                'id_villa' => $id,
+            ];
+            // Update data floorplan berdasarkan floorplan_id
+            Floorplan::where('id', $request->floorplan_id)->update($data_floorplan);
+
+            if ($request->hasfile('image_floorplan_edit')) {
+                $images = $request->file('image_floorplan_edit');
+                foreach ($images as $key => $image) {
+                    if ($image->isValid()) {
+                        if ($image->getSize() > 500000) {
+                            return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                        }
+
+                        // Simpan gambar ke storage
+                        $image = Storage::disk('uploads')->put('galeri_floorplan', $image);
+
+                        // Persiapkan data untuk GambarFloorplan baru atau update
+                        $object_gal = [
+                            'gambar' => $image,
+                            'deskripsi' => $request->deskripsi_floorplan_edit[$key],
+                        ];
+
+                        // Ambil atau buat record GambarFloorplan sesuai $key (id)
+                        $gallery = GambarFloorplan::findOrNew($key);
+                        $gallery->fill($object_gal);
+                        $gallery->id_floorplan = $request->floorplan_id; // Hubungkan dengan floorplan yang benar
+                        $gallery->id_villa = $id;
+
+
+                        // Hapus gambar lama jika ada
+                        if ($gallery->gambar && Storage::disk('uploads')->exists($gallery->gambar)) {
+                            Storage::disk('uploads')->delete($gallery->gambar);
+                        }
+                    } else {
+                    }
+                    $edit_image[$key] = $key;
+                    $a[] = $key;
+                }
+                // dd($a);
+            }
+            if ($request->hasfile('new_image_floorplan')) {
+                foreach ($request->file('new_image_floorplan') as $key => $image) {
+                    if ($image->isValid()) {
+                        if ($image->getSize() > 500000) {
+                            return redirect()->back()->with(['notif_status' => '0', 'notif' => 'Image size is too large. Max 500kb']);
+                        }
+
+                        $imagePath = Storage::disk('uploads')->put('galeri_floorplan', $image);
+
+                        $newGalleryData = [
+                            'gambar' => $imagePath,
+                            'deskripsi' => $request->new_deskripsi_floorplan[$key],
+                            'id_floorplan' => $request->floorplan_id,
+                            'id_villa' => $id,
+                        ];
+
+                        GambarFloorplan::create($newGalleryData);
+                    }
+                }
+            }
+        }
 
         // INCLUSIONS EDIT AND ADD
         if (empty($request->inclusions_id)) {
@@ -1357,7 +1402,7 @@ class VillasController extends Controller
                 'id_villa' => $id,
             ];
             Inclusions::insert($data_inclusions);
-        }else {
+        } else {
             $data_inclusions = [
                 'breakfast' => $request->breakfast_edit,
                 'breakfast_description' => $request->breakfast_description_edit,
@@ -1661,7 +1706,7 @@ class VillasController extends Controller
                 'id_villa' => $id,
             ];
             StaffAtVilla::insert($data_staf_villa);
-        }else {
+        } else {
             $data_staf_villa = [
                 'house_keeper' => $request->house_keeper_edit,
                 'satpam' => $request->satpam_edit,
@@ -1684,7 +1729,7 @@ class VillasController extends Controller
                 'id_villa' => $id,
             ];
             Chef::insert($data_chef);
-        }else {
+        } else {
             $data_chef = [
                 'chef' => $request->chef_edit,
                 'cost' => $request->cost_edit,
@@ -1705,7 +1750,7 @@ class VillasController extends Controller
             ];
             // dd($data_car);
             CarAndDrive::insert($data_car);
-        }else {
+        } else {
             $data_car = [
                 'system_for_use' => $request->system_for_use_edit,
                 'car_currency' => $request->car_currency_edit,
@@ -1747,7 +1792,7 @@ class VillasController extends Controller
                 'leasehold_available_until' => $request->leasehold_available_until,
             ];
             Pricing::insert($pricing);
-        }else {
+        } else {
             $pricing = [
                 'monthly_rental' => $request->monthly_rental_edit,
                 'monthly_description' => $request->monthly_description_edit,
@@ -1856,7 +1901,7 @@ class VillasController extends Controller
 
         $rates = json_decode($request->ratesJson);
 
-        if($rates->edit) {
+        if ($rates->edit) {
             $updateRateService->execute([
                 'rate_id' => $rates->rate_id,
                 'villa_id' => $id,
@@ -1866,7 +1911,7 @@ class VillasController extends Controller
                 'end_date' => $rates->end_date,
                 'rooms' => $rates->rooms,
             ]);
-        }else {
+        } else {
             $storeRateService->execute([
                 'villa_id' => $id,
                 'details' => $rates->details,
@@ -2186,7 +2231,7 @@ class VillasController extends Controller
     public function search_villa(
         Request $request,
         GetVillaService $getVillaService
-    ) {   
+    ) {
         $villas = [];
         // if ($request->has('start_date')) {
         //     dd($request->all());
@@ -2232,12 +2277,12 @@ class VillasController extends Controller
         // $request->merge([
         //     'status' => 'post'
         // ]);
-        
+
         $villas = $getVillaService->execute($request->all())->data;
 
         $areas = Areas::all();
-        $location = Location::where('area_id',$request->area_id)->get();
-        $sublocation = SubLocation::where('location_id',$request->location_id)->get();
+        $location = Location::where('area_id', $request->area_id)->get();
+        $sublocation = SubLocation::where('location_id', $request->location_id)->get();
         $data['areas'] = $areas;
         $data['villas'] = $villas;
         $data['location'] = $location;
@@ -2264,11 +2309,11 @@ class VillasController extends Controller
     public function create_beach($id)
     {
         $data["page_title"] = 'Tambah Beach';
-        $data["villa"] = Villas::where('id',$id)->with('beach')->firstorfail();
+        $data["villa"] = Villas::where('id', $id)->with('beach')->firstorfail();
         // dd($data["villa"]->toArray());
         return view('admin.experience.beach', $data);
     }
-    public function store_beach(Request $request,$id)
+    public function store_beach(Request $request, $id)
     {
         //  $rules = array(
         //     'what_beach' => 'required',
@@ -2307,7 +2352,7 @@ class VillasController extends Controller
     }
     public function edit_beach($id)
     {
-        $villa = Villas::where('id',$id)->with('beach')->firstorfail();
+        $villa = Villas::where('id', $id)->with('beach')->firstorfail();
         $data['page_title'] = 'Update Beach';
         $data['edit_mode'] = true;
         $data['villa'] = $villa;
@@ -2348,10 +2393,10 @@ class VillasController extends Controller
         );
 
 
-        $villa = Villas::where('id',$id)->with('beach')->firstorfail();
+        $villa = Villas::where('id', $id)->with('beach')->firstorfail();
         $current = BeachVilla::findOrFail($villa->beach->id);
 
-        $current->update($object); 
+        $current->update($object);
 
         return redirect()->route('admin.villa.edit', ['id' => $id])->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
     }
@@ -2361,12 +2406,12 @@ class VillasController extends Controller
         $beach = BeachVilla::where('id', $id)->firstOrFail();
         $beach->delete();
         return redirect()->route('admin.villa.edit', ['id' => $beach->id_villa])
-        ->with(['notif_status' => '1', 'notif' => 'Delete data succeed beach.']); 
+            ->with(['notif_status' => '1', 'notif' => 'Delete data succeed beach.']);
     }
     public function create_close($id)
     {
         $data["page_title"] = 'Tambah Close to the clubs';
-        $data["villa"] = Villas::where('id',$id)->with('close_clubs')->firstorfail();
+        $data["villa"] = Villas::where('id', $id)->with('close_clubs')->firstorfail();
         // dd($data["villa"]->toArray());
         return view('admin.experience.close', $data);
     }
@@ -2409,14 +2454,14 @@ class VillasController extends Controller
         ])->data;
 
         $delete_club = array_diff($existing_club->pluck('id')->toArray(), array_column($clubs, 'club_id'));
-        foreach($delete_club as $club_id) {
+        foreach ($delete_club as $club_id) {
             (new DeleteClubService)->execute([
                 'club_id' => $club_id,
             ]);
         }
 
-        foreach($clubs as $club) {
-            if(empty($club->club_id)) {
+        foreach ($clubs as $club) {
+            if (empty($club->club_id)) {
                 $storeClubService->execute([
                     'id_villa' => $club->id_villa,
                     'club_name' => $club->club_name,
@@ -2424,7 +2469,7 @@ class VillasController extends Controller
                     'good_days' => $club->good_days,
                     'other' => $club->other,
                 ]);
-            }else {
+            } else {
                 $updateClubService->execute([
                     'club_id' => $club->club_id,
                     'id_villa' => $club->id_villa,
@@ -2440,7 +2485,7 @@ class VillasController extends Controller
     }
     public function edit_close(Facilities $facilities, $id)
     {
-        $villa = Villas::where('id',$id)->with('close_clubs')->firstorfail();
+        $villa = Villas::where('id', $id)->with('close_clubs')->firstorfail();
         $data['page_title'] = 'Update Close';
         $data['edit_mode'] = true;
         $data['villa'] = $villa;
@@ -2472,35 +2517,34 @@ class VillasController extends Controller
             'good_days' => $request->good_days,
 
         ];
-        $villa = Villas::where('id',$id)->with('close_clubs')->firstorfail();
+        $villa = Villas::where('id', $id)->with('close_clubs')->firstorfail();
         $current = CloseToTheClubs::findOrFail($villa->close_clubs->id);
 
         $current->update($object);
 
         return redirect()->route('admin.villa.edit', ['id' => $id])
-        ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
-    
+            ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
     }
 
     public function destroy_close($id)
     {
         $close_clubs = CloseToTheClubs::where('id_villa', $id)->get();
-        
-        foreach($close_clubs as $club) {
+
+        foreach ($close_clubs as $club) {
             (new DeleteClubService)->execute([
                 'club_id' => $club->id,
             ]);
         }
 
         return redirect()->route('admin.villa.edit', ['id' => $id])
-        ->with(['notif_status' => '1', 'notif' => 'Delete data succeed close to the clubs.']);
+            ->with(['notif_status' => '1', 'notif' => 'Delete data succeed close to the clubs.']);
     }
     public function create_family(
         GetCurrencyService $getCurrencyService,
         $id
     ) {
         $data["page_title"] = 'Tambah Family';
-        $data["villa"] = Villas::where('id',$id)->with('family')->firstorfail();
+        $data["villa"] = Villas::where('id', $id)->with('family')->firstorfail();
         // dd($data["villa"]->toArray());
         $data['currencies'] = $getCurrencyService->execute()->data;
 
@@ -2508,9 +2552,10 @@ class VillasController extends Controller
     }
     public function store_family(
         StoreFamilyVillaService $storeFamilyVillaService,
-        Request $request, $id
+        Request $request,
+        $id
     ) {
-         //\
+        //\
         //  $rules = array(
         //     'pool_fence' => 'required',
         //     'baby_cot' => 'required',
@@ -2534,7 +2579,7 @@ class VillasController extends Controller
         //         ->withErrors($validator)
         //         ->withInput();
         // }
-        
+
         // $object = [
         //     'pool_fence' => $request->pool_fence,
         //     'baby_cot' => $request->baby_cot,
@@ -2581,7 +2626,7 @@ class VillasController extends Controller
         Facilities $facilities,
         $id
     ) {
-        $villa = Villas::where('id',$id)->with('family')->firstorfail();
+        $villa = Villas::where('id', $id)->with('family')->firstorfail();
         $data['page_title'] = 'Update Family';
         $data['edit_mode'] = true;
         $data['villa'] = $villa;
@@ -2594,7 +2639,7 @@ class VillasController extends Controller
         Request $request,
         $id
     ) {
-    
+
         //
         // $rules = array(
         //     'pool_fence' => 'required',
@@ -2629,9 +2674,9 @@ class VillasController extends Controller
         //     'costs_for_chef' => $request->costs_for_chef,
         //     'nanny_cost' => $request->nanny_cost,
         //     'included' => $request->included,
-            
+
         // ];
-        $villa = Villas::where('id',$id)->with('family')->firstorfail();
+        $villa = Villas::where('id', $id)->with('family')->firstorfail();
         $photos = null;
 
         if ($request->has('photos')) {
@@ -2676,8 +2721,7 @@ class VillasController extends Controller
         ]);
 
         return redirect()->route('admin.villa.edit', ['id' => $id])
-        ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
-    
+            ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
     }
 
     public function destroy_family(Facilities $facilities, $id)
@@ -2685,18 +2729,18 @@ class VillasController extends Controller
         $family = FamilyVilla::where('id', $id)->firstOrFail();
         $family->delete();
         return redirect()->route('admin.villa.edit', ['id' => $family->id_villa])
-        ->with(['notif_status' => '1', 'notif' => 'Delete data succeed family.']);
+            ->with(['notif_status' => '1', 'notif' => 'Delete data succeed family.']);
     }
     public function create_mountain($id)
     {
         $data["page_title"] = 'Tambah Mountain';
-        $data["villa"] = Villas::where('id',$id)->with('mountain')->firstorfail();
+        $data["villa"] = Villas::where('id', $id)->with('mountain')->firstorfail();
         // dd($data["villa"]->toArray());
         return view('admin.experience.mountain', $data);
     }
     public function store_mountain(Request $request, $id)
     {
-         //\
+        //\
         //  $rules = array(
         //     'mountain_view' => 'required',
         //     'view_of_ricefield' => 'required',
@@ -2735,7 +2779,7 @@ class VillasController extends Controller
     }
     public function edit_mountain($id)
     {
-        $villa = Villas::where('id',$id)->with('mountain')->firstorfail();
+        $villa = Villas::where('id', $id)->with('mountain')->firstorfail();
         $data['page_title'] = 'Update Mountain';
         $data['edit_mode'] = true;
         $data['villa'] = $villa;
@@ -2776,14 +2820,13 @@ class VillasController extends Controller
             'other' => $request->other,
         );
 
-        $villa = Villas::where('id',$id)->with('mountain')->firstorfail();
+        $villa = Villas::where('id', $id)->with('mountain')->firstorfail();
         $current = MountainVilla::findOrFail($villa->mountain->id);
 
         $current->update($object);
 
         return redirect()->route('admin.villa.edit', ['id' => $id])
-        ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
-    
+            ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
     }
 
     public function destroy_mountain($id)
@@ -2791,12 +2834,12 @@ class VillasController extends Controller
         $mountain = MountainVilla::where('id', $id)->firstOrFail();
         $mountain->delete();
         return redirect()->route('admin.villa.edit', ['id' => $mountain->id_villa])
-        ->with(['notif_status' => '1', 'notif' => 'Delete data succeed mountain.']);
+            ->with(['notif_status' => '1', 'notif' => 'Delete data succeed mountain.']);
     }
     public function create_retreats($id)
     {
         $data["page_title"] = 'Tambah Retreats';
-        $data["villa"] = Villas::where('id',$id)->with('retreats')->firstorfail();
+        $data["villa"] = Villas::where('id', $id)->with('retreats')->firstorfail();
         // dd($data["villa"]->toArray());
         return view('admin.experience.retreats', $data);
     }
@@ -2836,7 +2879,7 @@ class VillasController extends Controller
     }
     public function edit_retreats($id)
     {
-        $villa = Villas::where('id',$id)->with('retreats')->firstorfail();
+        $villa = Villas::where('id', $id)->with('retreats')->firstorfail();
         $data['page_title'] = 'Update Retreats';
         $data['edit_mode'] = true;
         $data['villa'] = $villa;
@@ -2871,14 +2914,13 @@ class VillasController extends Controller
             'gym' => $request->gym,
             'other' => $request->other,
         ];
-        $villa = Villas::where('id',$id)->with('retreats')->firstorfail();
+        $villa = Villas::where('id', $id)->with('retreats')->firstorfail();
         $current = Retreats::findOrFail($villa->retreats->id);
 
         $current->update($object);
 
         return redirect()->route('admin.villa.edit', ['id' => $id])
-        ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
-    
+            ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
     }
 
     public function destroy_retreats($id)
@@ -2887,14 +2929,14 @@ class VillasController extends Controller
         $retreats = Retreats::where('id', $id)->firstOrFail();
         $retreats->delete();
         return redirect()->route('admin.villa.edit', ['id' => $retreats->id_villa])
-        ->with(['notif_status' => '1', 'notif' => 'Delete data succeed Retreats.']);
+            ->with(['notif_status' => '1', 'notif' => 'Delete data succeed Retreats.']);
     }
     public function create_wedding(
         GetCurrencyService $getCurrencyService,
         $id
     ) {
         $data["page_title"] = 'Tambah Wedding';
-        $data["villa"] = Villas::where('id',$id)->with('wedding')->firstorfail();
+        $data["villa"] = Villas::where('id', $id)->with('wedding')->firstorfail();
         // dd($data["villa"]->toArray());
         $data['currencies'] = $getCurrencyService->execute()->data;
 
@@ -2905,7 +2947,7 @@ class VillasController extends Controller
         Request $request,
         $id
     ) {
-         //\
+        //\
         //  $rules = array(
         //     'standing_guests' => 'required',
         //     'seated_guests' => 'required',
@@ -2969,7 +3011,7 @@ class VillasController extends Controller
         Facilities $facilities,
         $id
     ) {
-        $villa = Villas::where('id',$id)->with('wedding')->firstorfail();
+        $villa = Villas::where('id', $id)->with('wedding')->firstorfail();
         $data['page_title'] = 'Update Wedding';
         $data['edit_mode'] = true;
         $data['villa'] = $villa;
@@ -3015,7 +3057,7 @@ class VillasController extends Controller
         //     'wedding_packages' => $request->wedding_packages,
         //     'wedding_packages_information' => $request->wedding_packages_information,
         // ];
-        $villa = Villas::where('id',$id)->with('wedding')->firstorfail();
+        $villa = Villas::where('id', $id)->with('wedding')->firstorfail();
         // $current = WeddingVilla::findOrFail($villa->wedding->id);
 
         // $current->update($object);
@@ -3042,7 +3084,7 @@ class VillasController extends Controller
         ]);
 
         return redirect()->route('admin.villa.edit', ['id' => $id])
-        ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
+            ->with(['notif_status' => '1', 'notif' => 'Update data succeed.']);
     }
 
     public function destroy_wedding($id)
@@ -3050,7 +3092,7 @@ class VillasController extends Controller
         $wedding = WeddingVilla::where('id', $id)->firstOrFail();
         $wedding->delete();
         return redirect()->route('admin.villa.edit', ['id' => $wedding->id_villa])
-        ->with(['notif_status' => '1', 'notif' => 'Delete data succeed wedding.']);
+            ->with(['notif_status' => '1', 'notif' => 'Delete data succeed wedding.']);
     }
 
     public function changeStatus(Request $request)

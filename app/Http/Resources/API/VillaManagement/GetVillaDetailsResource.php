@@ -88,6 +88,9 @@ class GetVillaDetailsResource extends JsonResource
             'mountain_villa' => $data['mountain_villa'],
             'villa_include' => $data['villa_include'],
             'villa_bvp' => $this->villa_bvp,
+            'slug' => $this->slug,
+            'whatsapp' => $this->whatsapp,
+            'email' => $this->email,
         ];
     }
 

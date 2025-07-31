@@ -14,16 +14,16 @@ class Villas extends Model
 
     protected $table = "villas";
     protected $fillable = [
-        'name', 
-        'country_id', 
-        'area_id', 
-        'location_id', 
+        'name',
+        'country_id',
+        'area_id',
+        'location_id',
         'sub_location_id',
-        'user_id', 
-        'address', 
-        'link_map', 
-        'cor_lat', 
-        'cor_long', 
+        'user_id',
+        'address',
+        'link_map',
+        'cor_lat',
+        'cor_long',
         'type_accomodation',
         'privacy_type',
         'guest',
@@ -60,6 +60,9 @@ class Villas extends Model
         'link_ical',
         'villa_link',
         'villa_bvp',
+        'slug',
+        'whatsapp',
+        'email',
     ];
 
     public function countries()

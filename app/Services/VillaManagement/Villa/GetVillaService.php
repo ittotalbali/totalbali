@@ -81,6 +81,15 @@ class GetVillaService implements BaseService
         if (isset($dto['villa_bvp'])) {
             $villa->where('villa_bvp', $dto['villa_bvp']);
         }
+        if (isset($dto['slug'])) {
+            $villa->where('slug', $dto['slug']);
+        }
+        if (isset($dto['whatsapp'])) {
+            $villa->where('whatsapp', $dto['whatsapp']);
+        }
+        if (isset($dto['email'])) {
+            $villa->where('email', $dto['email']);
+        }
         if (isset($dto['type_accommodation'])) {
             $villa->where('type_accomodation', $dto['type_accommodation']);
         }
