@@ -225,30 +225,62 @@ class GetVillaService implements BaseService
             $villa->where('code', $dto['code']);
         }
 
-        if (isset($dto['lat']) && isset($dto['lng'])) {
-            $lat = floatval($dto['lat']);
-            $lng = floatval($dto['lng']);
-            // $zoom = isset($dto['zoom']) ? intval($dto['zoom']) : 18;
-            $zoom = 18;
 
-            $radius_km = match (true) {
-                $zoom >= 18 => 1,
-                $zoom >= 16 => 5,
-                $zoom >= 14 => 10,
-                default => 20,
-            };
-
-            $lat_delta = $radius_km / 111;
-            $lng_delta = $radius_km / (111 * cos(deg2rad($lat)));
-
-            $min_lat = $lat - $lat_delta;
-            $max_lat = $lat + $lat_delta;
-            $min_lng = $lng - $lng_delta;
-            $max_lng = $lng + $lng_delta;
-
-            $villa->whereRaw('CAST(cor_lat AS DECIMAL(10,6)) BETWEEN ? AND ?', [$min_lat, $max_lat])
-                  ->whereRaw('CAST(cor_long AS DECIMAL(10,6)) BETWEEN ? AND ?', [$min_lng, $max_lng]);
-        }
+if (isset($dto['lat']) && isset($dto['lng'])) {
+    $lat = floatval($dto['lat']);
+    $lng = floatval($dto['lng']);
+    $zoom = intval($dto['zoom'] ?? 15);
+    
+    $radius_km = match (true) {
+        $zoom >= 19 => 0.3,   
+        $zoom >= 18 => 0.5,   
+        $zoom >= 17 => 0.8,   
+        $zoom >= 16 => 1.2,   
+        $zoom >= 15 => 2.0,   
+        $zoom >= 14 => 3.5,   
+        $zoom >= 13 => 6.0,   
+        $zoom >= 12 => 10.0,  
+        $zoom >= 11 => 16.0,  
+        default => 25.0,      
+    };
+    
+    
+    $max_results = match (true) {
+        $zoom >= 17 => 5,     
+        $zoom >= 15 => 8,     
+        $zoom >= 13 => 12,    
+        $zoom >= 11 => 15,    
+        default => 20,        
+    };
+    
+ 
+    $lat_delta = ($radius_km * 1.5) / 111; 
+    $lng_delta = ($radius_km * 1.5) / (111 * cos(deg2rad($lat)));
+    
+    $min_lat = $lat - $lat_delta;
+    $max_lat = $lat + $lat_delta;
+    $min_lng = $lng - $lng_delta;
+    $max_lng = $lng + $lng_delta;
+    
+    
+    $villa->whereRaw('CAST(cor_lat AS DECIMAL(10,6)) BETWEEN ? AND ?', [$min_lat, $max_lat])
+          ->whereRaw('CAST(cor_long AS DECIMAL(10,6)) BETWEEN ? AND ?', [$min_lng, $max_lng]);
+    
+    $haversine = "
+        (6371 * acos(
+            cos(radians(?)) * 
+            cos(radians(CAST(cor_lat AS DECIMAL(10,6)))) * 
+            cos(radians(CAST(cor_long AS DECIMAL(10,6))) - radians(?)) + 
+            sin(radians(?)) * 
+            sin(radians(CAST(cor_lat AS DECIMAL(10,6))))
+        ))
+    ";
+    
+    $villa->selectRaw("*, ($haversine) as distance_km", [$lat, $lng, $lat])
+          ->whereRaw("$haversine <= ?", [$lat, $lng, $lat, $radius_km])
+          ->orderByRaw("$haversine", [$lat, $lng, $lat])
+          ->limit($max_results);
+}
 
         if (isset($dto['villa_id'])) {
             $result  = (object) ['data' => $villa->where('id', $dto['villa_id'])->first()];
@@ -268,7 +300,6 @@ class GetVillaService implements BaseService
     public function print(array $dto = [], $result): mixed
     {
         $data = $result["data"];
-
 
 
         if (isset($dto['curs_exchanges_id'])) {
