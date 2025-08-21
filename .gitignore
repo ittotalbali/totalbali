@@ -12,3 +12,6 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 cron_log.txt
+Dockerfile
+docker-compose.yml
+/docker/nginx/default.conf

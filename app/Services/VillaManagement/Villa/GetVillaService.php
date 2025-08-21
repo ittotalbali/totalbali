@@ -225,6 +225,30 @@ class GetVillaService implements BaseService
             $villa->where('code', $dto['code']);
         }
 
+        if (isset($dto['lat']) && isset($dto['lng'])) {
+            $lat = floatval($dto['lat']);
+            $lng = floatval($dto['lng']);
+            $zoom = isset($dto['zoom']) ? intval($dto['zoom']) : 18;
+
+            $radius_km = match (true) {
+                $zoom >= 18 => 1,
+                $zoom >= 16 => 5,
+                $zoom >= 14 => 10,
+                default => 20,
+            };
+
+            $lat_delta = $radius_km / 111;
+            $lng_delta = $radius_km / (111 * cos(deg2rad($lat)));
+
+            $min_lat = $lat - $lat_delta;
+            $max_lat = $lat + $lat_delta;
+            $min_lng = $lng - $lng_delta;
+            $max_lng = $lng + $lng_delta;
+
+            $villa->whereRaw('CAST(cor_lat AS DECIMAL(10,6)) BETWEEN ? AND ?', [$min_lat, $max_lat])
+                  ->whereRaw('CAST(cor_long AS DECIMAL(10,6)) BETWEEN ? AND ?', [$min_lng, $max_lng]);
+        }
+
         if (isset($dto['villa_id'])) {
             $result  = (object) ['data' => $villa->where('id', $dto['villa_id'])->first()];
         } else {
