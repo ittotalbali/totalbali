@@ -278,8 +278,8 @@ if (isset($dto['lat']) && isset($dto['lng'])) {
     
     $villa->selectRaw("*, ($haversine) as distance_km", [$lat, $lng, $lat])
           ->whereRaw("$haversine <= ?", [$lat, $lng, $lat, $radius_km])
-          ->orderByRaw("$haversine", [$lat, $lng, $lat])
-          ->limit($max_results);
+          ->orderByRaw("$haversine", [$lat, $lng, $lat]);
+        //   ->limit($max_results);
 }
 
         if (isset($dto['villa_id'])) {
