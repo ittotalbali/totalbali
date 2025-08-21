@@ -228,7 +228,8 @@ class GetVillaService implements BaseService
         if (isset($dto['lat']) && isset($dto['lng'])) {
             $lat = floatval($dto['lat']);
             $lng = floatval($dto['lng']);
-            $zoom = isset($dto['zoom']) ? intval($dto['zoom']) : 18;
+            // $zoom = isset($dto['zoom']) ? intval($dto['zoom']) : 18;
+            $zoom = 18;
 
             $radius_km = match (true) {
                 $zoom >= 18 => 1,
