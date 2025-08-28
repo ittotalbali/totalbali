@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\VillaManagement;
 
+use App\Helpers\PaginationAdapter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\API\VillaManagement\GetVillaDetailsResource;
 use App\Http\Resources\API\VillaManagement\GetVillaResource;
@@ -27,27 +28,50 @@ class VillaAPIController extends Controller
             ], 404);
         }
 
-        $data = isset($result->data->id) ? new GetVillaResource($result->data) :
-        GetVillaResource::collection($result->data);
+        $compatibleResult =$result;
 
-        $response = response()->json([
-            'success' => true,
-            'data' => $data,
-            'message' => 'Villa retrieved successfully',
-        ]);
+        if (isset($compatibleResult->pagination)) {
+            $data = GetVillaResource::collection($compatibleResult->data);
+            
+            $response = response()->json([
+                'success' => true,
+                'data' => $data,
+                'message' => 'Villa retrieved successfully',
+                'pagination' => $result->pagination
+            ]);
+        } else {
+            // Handle single item response
+            $data = isset($compatibleResult->data->id) ? 
+                   new GetVillaResource($compatibleResult->data) : 
+                   GetVillaResource::collection($compatibleResult->data);
+
+            $response = response()->json([
+                'success' => true,
+                'data' => $data,
+                'message' => 'Villa retrieved successfully',
+            ]);
+        }
 
         $data = $response->getData();
-
         $dataArray = json_decode(json_encode($data), true);
 
         $conversion_data = $getVillaService->printArr($request->all(), $dataArray);
 
-        return response()->json([
-            'success' => true,
-            'data' => $conversion_data,
-            'message' => 'Villa retrieved successfully',
-            'pagination' => $result->pagination ?? null
-        ]);
+        // Return response with proper pagination structure
+        if (isset($compatibleResult->pagination)) {
+            return response()->json([
+                'success' => true,
+                'data' => $conversion_data,
+                'message' => 'Villa retrieved successfully',
+                'pagination' => $compatibleResult->pagination
+            ]);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data' => $conversion_data,
+                'message' => 'Villa retrieved successfully',
+            ]);
+        }
     }
 
     public function details(

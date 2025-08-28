@@ -226,47 +226,45 @@ class GetVillaService implements BaseService
         }
 
 
-if (isset($dto['lat']) && isset($dto['lng'])) {
-    $lat = floatval($dto['lat']);
-    $lng = floatval($dto['lng']);
-    $zoom = intval($dto['zoom'] ?? 15);
-    
-    $radius_km = match (true) {
-        $zoom >= 19 => 0.3,   
-        $zoom >= 18 => 0.5,   
-        $zoom >= 17 => 0.8,   
-        $zoom >= 16 => 1.2,   
-        $zoom >= 15 => 2.0,   
-        $zoom >= 14 => 3.5,   
-        $zoom >= 13 => 6.0,   
-        $zoom >= 12 => 10.0,  
-        $zoom >= 11 => 16.0,  
-        default => 25.0,      
-    };
-    
-    
-    $max_results = match (true) {
-        $zoom >= 17 => 5,     
-        $zoom >= 15 => 8,     
-        $zoom >= 13 => 12,    
-        $zoom >= 11 => 15,    
-        default => 20,        
-    };
-    
- 
-    $lat_delta = ($radius_km * 1.5) / 111; 
-    $lng_delta = ($radius_km * 1.5) / (111 * cos(deg2rad($lat)));
-    
-    $min_lat = $lat - $lat_delta;
-    $max_lat = $lat + $lat_delta;
-    $min_lng = $lng - $lng_delta;
-    $max_lng = $lng + $lng_delta;
-    
-    
-    $villa->whereRaw('CAST(cor_lat AS DECIMAL(10,6)) BETWEEN ? AND ?', [$min_lat, $max_lat])
-          ->whereRaw('CAST(cor_long AS DECIMAL(10,6)) BETWEEN ? AND ?', [$min_lng, $max_lng]);
-    
-    $haversine = "
+        if (isset($dto['lat']) && isset($dto['lng'])) {
+            $lat = floatval($dto['lat']);
+            $lng = floatval($dto['lng']);
+            $zoom = intval($dto['zoom'] ?? 15);
+
+            $radius_km = match (true) {
+                $zoom >= 19 => 0.3,
+                $zoom >= 18 => 0.5,
+                $zoom >= 17 => 0.8,
+                $zoom >= 16 => 1.2,
+                $zoom >= 15 => 2.0,
+                $zoom >= 14 => 3.5,
+                $zoom >= 13 => 6.0,
+                $zoom >= 12 => 10.0,
+                $zoom >= 11 => 16.0,
+                default => 25.0,
+            };
+
+            $max_results = match (true) {
+                $zoom >= 17 => 5,
+                $zoom >= 15 => 8,
+                $zoom >= 13 => 12,
+                $zoom >= 11 => 15,
+                default => 20,
+            };
+
+            $lat_delta = ($radius_km * 1.5) / 111;
+            $lng_delta = ($radius_km * 1.5) / (111 * cos(deg2rad($lat)));
+
+            $min_lat = $lat - $lat_delta;
+            $max_lat = $lat + $lat_delta;
+            $min_lng = $lng - $lng_delta;
+            $max_lng = $lng + $lng_delta;
+
+
+            $villa->whereRaw('CAST(cor_lat AS DECIMAL(10,6)) BETWEEN ? AND ?', [$min_lat, $max_lat])
+                ->whereRaw('CAST(cor_long AS DECIMAL(10,6)) BETWEEN ? AND ?', [$min_lng, $max_lng]);
+
+            $haversine = "
         (6371 * acos(
             cos(radians(?)) * 
             cos(radians(CAST(cor_lat AS DECIMAL(10,6)))) * 
@@ -275,23 +273,53 @@ if (isset($dto['lat']) && isset($dto['lng'])) {
             sin(radians(CAST(cor_lat AS DECIMAL(10,6))))
         ))
     ";
-    
-    $villa->selectRaw("*, ($haversine) as distance_km", [$lat, $lng, $lat])
-          ->whereRaw("$haversine <= ?", [$lat, $lng, $lat, $radius_km])
-          ->orderByRaw("$haversine", [$lat, $lng, $lat]);
-        //   ->limit($max_results);
-}
+
+
+            $villa->selectRaw("*, ($haversine) as distance_km", [$lat, $lng, $lat])
+                ->whereRaw("$haversine <= ?", [$lat, $lng, $lat, $radius_km])
+                ->orderByRaw("$haversine", [$lat, $lng, $lat]);
+        }
+
 
         if (isset($dto['villa_id'])) {
             $result  = (object) ['data' => $villa->where('id', $dto['villa_id'])->first()];
         } else {
             if (isset($dto['is_paginate'])) {
-                $result = paginate($villa, [
-                    'length' => $dto['length'] ?? 10,
-                    'page' => $dto['page'] ?? 1
-                ]);
+                $length = $dto['length'] ?? 10;
+                $page = $dto['page'] ?? 1;
+
+                // Check if this is a haversine query (has distance_km in select)
+                $isHaversineQuery = isset($dto['lat']) && isset($dto['lng']);
+
+                if ($isHaversineQuery) {
+                    // For haversine queries, we need to handle counting differently
+                    $totalCount = $this->countHaversineResults($villa, $dto);
+                } else {
+                    // Normal count for regular queries
+                    $totalCount = $villa->count();
+                }
+
+                // Get paginated data
+                $data = $villa->skip(($page - 1) * $length)
+                    ->take($length)
+                    ->get();
+
+                // Calculate your pagination format
+                $totalPages = ceil($totalCount / $length);
+                $hasMore = $page < $totalPages;
+
+                $result = (object) [
+                    'data' => $data,
+                    'pagination' => (object) [
+                        'total_count' => $totalCount,
+                        'total_pages' => $totalPages,
+                        'page' => (int)$page,
+                        'size' => (int)$length,
+                        'has_more' => $hasMore
+                    ]
+                ];
             } else {
-                $result  = (object) ['data' => ($villa instanceof Builder) ? $villa->get() : $villa];
+                $result = (object) ['data' => ($villa instanceof Builder) ? $villa->get() : $villa];
             }
         }
 
@@ -544,5 +572,45 @@ if (isset($dto['lat']) && isset($dto['lng'])) {
         }
 
         return $data;
+    }
+
+    private function countHaversineResults($query, $dto)
+    {
+        $lat = floatval($dto['lat']);
+        $lng = floatval($dto['lng']);
+        $zoom = intval($dto['zoom'] ?? 15);
+
+        $radius_km = match (true) {
+            $zoom >= 19 => 0.3,
+            $zoom >= 18 => 0.5,
+            $zoom >= 17 => 0.8,
+            $zoom >= 16 => 1.2,
+            $zoom >= 15 => 2.0,
+            $zoom >= 14 => 3.5,
+            $zoom >= 13 => 6.0,
+            $zoom >= 12 => 10.0,
+            $zoom >= 11 => 16.0,
+            default => 25.0,
+        };
+
+        // Create a clone of the query without the selectRaw for counting
+        $countQuery = clone $query;
+
+        // Remove any existing select statements
+        $countQuery->getQuery()->selects = null;
+
+        $haversine = "
+        (6371 * acos(
+            cos(radians(?)) * 
+            cos(radians(CAST(cor_lat AS DECIMAL(10,6)))) * 
+            cos(radians(CAST(cor_long AS DECIMAL(10,6))) - radians(?)) + 
+            sin(radians(?)) * 
+            sin(radians(CAST(cor_lat AS DECIMAL(10,6))))
+        ))
+    ";
+
+        // Apply the haversine condition for counting
+        return $countQuery->whereRaw("$haversine <= ?", [$lat, $lng, $lat, $radius_km])
+            ->count();
     }
 }
