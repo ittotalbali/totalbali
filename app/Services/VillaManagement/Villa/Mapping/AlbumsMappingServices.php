@@ -10,19 +10,16 @@ class AlbumsMappingServices implements BaseService
     {
         $albums = $dto['albums'] ?? collect();
 
-        // Filter hanya album dengan nama 'Other' dan ambil maksimal 5
-        $filteredAlbums = $albums->filter(function ($album) {
+        $galeries = $albums->filter(function ($album) {
             return strtolower($album->nama) === 'other';
-        })->take(5);
-
-        // Ambil semua galeri dari album yang lolos filter, gabungkan jadi satu array
-        $galeries = $filteredAlbums->flatMap(function ($album) {
+        })->flatMap(function ($album) {
             return $album->galeri->map(function ($item) {
                 return [
                     'image_url' => !empty($item->image) ? asset('uploads/' . $item->image) : null,
                 ];
             });
-        })->values(); // reset index
+        })->take(5) // <-- limit di level foto
+            ->values();
 
         return (object) [
             'success' => true,
