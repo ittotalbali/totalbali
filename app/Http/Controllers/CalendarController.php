@@ -142,6 +142,15 @@ class CalendarController extends Controller
                         $result[$key][$explode2[0]] = $explode2[1];
                     } elseif ($explode2[0] == 'summary') {
                         $result[$key][$explode2[0]] = $explode2[1];
+                        // Tambahan: deteksi format dengan TZID (contoh: DTSTART;TZID=Asia/Makassar:20251107T150000)
+                    } elseif (preg_match('/DTSTART(;TZID=[^:]+)?:([0-9T]+)/', $value1, $m)) {
+                        $date = substr($m[2], 0, 8);
+                        $result[$key]['start_date'] = date_create_from_format("Ymd", $date);
+                    } elseif (preg_match('/DTEND(;TZID=[^:]+)?:([0-9T]+)/', $value1, $m)) {
+                        $date = substr($m[2], 0, 8);
+                        $result[$key]['end_date'] = date_create_from_format("Ymd", $date);
+
+                        // Format lama tetap dipertahankan untuk kompatibilitas
                     } elseif (str_contains($value1, 'DTSTART')) {
                         $result[$key]['start_date'] = date_create_from_format("Ymd", substr($explode2[1], 0, 8));
                     } elseif (str_contains($value1, 'DTEND')) {
