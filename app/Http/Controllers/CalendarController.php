@@ -149,19 +149,28 @@ class CalendarController extends Controller
                         // Tambahan: deteksi format dengan TZID (contoh: DTSTART;TZID=Asia/Makassar:20251107T150000)
                     } elseif (preg_match('/DTSTART(;TZID=[^:]+)?:([0-9T]+)/', $value1, $m)) {
                         $date = substr($m[2], 0, 8);
-                        $result[$key]['start_date'] = date_create_from_format("Ymd", $date);
+                        $result[$key]['start_date'] = preg_match('/^\d{8}$/', $date) ? date('Y-m-d', strtotime($date)) : null;
                     } elseif (preg_match('/DTEND(;TZID=[^:]+)?:([0-9T]+)/', $value1, $m)) {
                         $date = substr($m[2], 0, 8);
-                        $result[$key]['end_date'] = date_create_from_format("Ymd", $date);
+                        $result[$key]['end_date'] = preg_match('/^\d{8}$/', $date) ? date('Y-m-d', strtotime($date)) : null;
 
                         // Format lama tetap dipertahankan untuk kompatibilitas
                     } elseif (str_contains($value1, 'DTSTART')) {
-                        $result[$key]['start_date'] = date_create_from_format("Ymd", substr($explode2[1], 0, 8));
+                        $date = substr($explode2[1] ?? '', 0, 8);
+                        if (preg_match('/^\d{8}$/', $date)) {
+                            $result[$key][$explode2[0]] = date('Y-m-d', strtotime($date));
+                        } else {
+                            $result[$key][$explode2[0]] = null;
+                        }
                     } elseif (str_contains($value1, 'DTEND')) {
                         $result[$key]['end_date'] = date_create_from_format("Ymd", substr($explode2[1], 0, 8));
                     }
                 }
             }
+            // Hapus entri yang tidak punya tanggal valid
+            $result = array_filter($result, function ($r) {
+                return !empty($r['start_date']) && !empty($r['end_date']);
+            });
 
             DB::table('calenders')->where('villa_id', $id)->delete();
             Calender::insert($result);
