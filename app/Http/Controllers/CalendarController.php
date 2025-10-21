@@ -65,6 +65,8 @@ class CalendarController extends Controller
                 ",DESCRIPTION:",
                 ",DTSTART:",
                 ",DTEND:",
+                ",DTSTART;TZID=", // ✅ tambahkan ini
+                ",DTEND;TZID=",   // ✅ dan ini
             ];
             $array   = [
                 '[',
@@ -80,6 +82,8 @@ class CalendarController extends Controller
                 ',description:',
                 ',start_date:',
                 ',end_date:',
+                ',start_date:',   // ✅ untuk DTSTART;TZID
+                ',end_date:',     // ✅ untuk DTEND;TZID
             ];
 
             $data = trim(preg_replace('/\s+/', '', $data_filter));
