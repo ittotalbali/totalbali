@@ -110,10 +110,12 @@ class CalendarController extends Controller
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because empty']);
             }
 
-            if (!str_contains($json[0]->text, 'start_date')) {
+            // Nanti setelah parsing & filter:
+            if (empty($result)) {
                 return redirect()->route('admin.villa.edit', ['id' => $id])
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because start date not found']);
             }
+
 
             if (!str_contains($json[0]->text, 'end_date')) {
                 return redirect()->route('admin.villa.edit', ['id' => $id])
@@ -162,8 +164,9 @@ class CalendarController extends Controller
                         } else {
                             $result[$key][$explode2[0]] = null;
                         }
-                    } elseif (str_contains($value1, 'DTEND')) {
-                        $result[$key]['end_date'] = date_create_from_format("Ymd", substr($explode2[1], 0, 8));
+                    } elseif (preg_match('/DTEND(;TZID=[^:]+)?:([0-9T]+)/', $value1, $m)) {
+                        $date = substr($m[2], 0, 8);
+                        $result[$key]['end_date'] = preg_match('/^\d{8}$/', $date) ? date('Y-m-d', strtotime($date)) : null;
                     }
                 }
             }
@@ -171,21 +174,18 @@ class CalendarController extends Controller
             $result = array_filter($result, function ($r) {
                 return !empty($r['start_date']) && !empty($r['end_date']);
             });
+            if (empty($result)) {
+                return redirect()->route('admin.villa.edit', ['id' => $id])
+                    ->with(['notif_status' => '0', 'notif' => 'Import failed because no valid events found']);
+            }
 
             DB::table('calenders')->where('villa_id', $id)->delete();
             Calender::insert($result);
 
-            if (!empty($request->ical_link)) {
-                $villa = Villas::find($id);
-                $villa->update([
-                    'link_ical' => $request->ical_link
-                ]);
-            } else {
-                $villa = Villas::find($id);
-                $villa->update([
-                    'link_ical' => $request->ical_link
-                ]);
-            }
+            $villa = Villas::find($id);
+            $villa->update([
+                'link_ical' => $request->ical_link
+            ]);
 
             return redirect()->route('admin.villa.edit', ['id' => $id])
                 ->with(['notif_status' => '1', 'notif' => 'Import data ical succeed.']);
