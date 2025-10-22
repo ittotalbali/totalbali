@@ -18,7 +18,7 @@ class CalendarController extends Controller
 
     public function import(Request $request, $id)
     {
-        if (empty($request->ical_link) and empty($request->file('ical'))) {
+        if (empty($request->ical_link) && empty($request->file('ical'))) {
             return redirect()->route('admin.villa.edit', ['id' => $id])
                 ->with(['notif_status' => '0', 'notif' => 'Ical link or file required']);
         }
@@ -31,7 +31,6 @@ class CalendarController extends Controller
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0');
 
             $fileContents = curl_exec($ch);
-
             curl_close($ch);
         } else {
             $file = $request->file('ical');
@@ -44,155 +43,110 @@ class CalendarController extends Controller
         }
 
         try {
-            $cek = preg_split("/\n|\r\n/", $fileContents);
-            $search = array_search("BEGIN:VEVENT", $cek, true);
-            for ($i = 1; $i < $search; $i++) {
-                unset($cek[$i]);
+            // Normalisasi line ending dan trim
+            $fileContents = str_replace("\r\n", "\n", $fileContents);
+            $fileContents = trim($fileContents);
+
+            // Ambil semua VEVENT secara aman
+            preg_match_all('/BEGIN:VEVENT(.*?)END:VEVENT/s', $fileContents, $matches);
+            if (empty($matches[1])) {
+                return redirect()->route('admin.villa.edit', ['id' => $id])
+                    ->with(['notif_status' => '0', 'notif' => 'Import failed because no VEVENT found']);
             }
-            $data_filter = implode(',', $cek);
 
-            $text = [
-                "BEGIN:VCALENDAR",
-                ",BEGIN:VEVENT",
-                ",END:VEVENT,END:VCALENDAR,",
-                ",END:VEVENT,END:VCALENDAR",
-                ",END:VEVENT",
-                ",DTEND;VALUE=DATE:",
-                ",DTSTART;VALUE=DATE:",
-                ",SUMMARY:",
-                ",UID:",
-                ",UUID:",
-                ",DESCRIPTION:",
-                ",DTSTART:",
-                ",DTEND:",
-                ",DTSTART;TZID=", // ✅ tambahkan ini
-                ",DTEND;TZID=",   // ✅ dan ini
-            ];
-            $array   = [
-                '[',
-                '{"text":"',
-                '"}]',
-                '"}]',
-                '"},',
-                ',end_date:',
-                ',start_date:',
-                ',summary:',
-                ',uuid:',
-                ',uuid:',
-                ',description:',
-                ',start_date:',
-                ',end_date:',
-                ',start_date:',   // ✅ untuk DTSTART;TZID
-                ',end_date:',     // ✅ untuk DTEND;TZID
-            ];
+            $result = [];
 
-            $data = trim(preg_replace('/\s+/', '', $data_filter));
-            $newPhrase = str_replace($text, $array, $data);
-            $json = json_decode($newPhrase);
+            foreach ($matches[1] as $evtIndex => $evtBody) {
+                // masing-masing event: cari field-field penting
+                $uid = null;
+                $summary = null;
+                $description = null;
+                $startDate = null;
+                $endDate = null;
 
-            if (empty($json) and !empty($newPhrase)) {
-                $newPhrase = str_replace("[{", "", $newPhrase);
-                $newPhrase = str_replace("}]", "", $newPhrase);
-                $newPhrase = str_replace('"text":",', "", $newPhrase);
-                $newPhrase = str_replace('"', "", $newPhrase);
-                $newPhrase = explode('},{', $newPhrase);
-
-                $json = [];
-                foreach ($newPhrase as $value) {
-                    $json[] = (object) [
-                        'text' => $value
-                    ];
+                // UID
+                if (preg_match('/UID:(.+)/', $evtBody, $m)) {
+                    $uid = trim($m[1]);
                 }
-            }
 
-            if (empty($json)) {
-                return redirect()->route('admin.villa.edit', ['id' => $id])
-                    ->with(['notif_status' => '0', 'notif' => 'Import failed because empty']);
-            }
-
-            // Nanti setelah parsing & filter:
-            if (empty($result)) {
-                return redirect()->route('admin.villa.edit', ['id' => $id])
-                    ->with(['notif_status' => '0', 'notif' => 'Import failed because start date not found']);
-            }
-
-
-            if (!str_contains($json[0]->text, 'end_date')) {
-                return redirect()->route('admin.villa.edit', ['id' => $id])
-                    ->with(['notif_status' => '0', 'notif' => 'Import failed because end date not found']);
-            }
-
-            foreach ($json as $key => $value) {
-                if (!is_object($value) || !property_exists($value, 'text')) {
-                    continue; // Lewatkan jika bukan objek atau tidak ada "text"
+                // SUMMARY
+                if (preg_match('/SUMMARY:(.+)/', $evtBody, $m)) {
+                    $summary = trim($m[1]);
                 }
-                $explode1 = explode(',', $value->text);
-                $result[$key]['uuid'] = "";
-                $result[$key]['start_date'] = "";
-                $result[$key]['end_date'] = "";
-                $result[$key]['description'] = "";
-                $result[$key]['summary'] = "";
-                $result[$key]['villa_id'] = $id;
-                $result[$key]['created_at'] = now();
-                $result[$key]['updated_at'] = now();
 
-                foreach ($explode1 as $key1 => $value1) {
-                    $explode2 = explode(':', $value1);
-                    if ($explode2[0] == 'description') {
-                        $result[$key][$explode2[0]] = preg_replace('/\s+/', '', str_replace('description:', '', $value1));
-                    } elseif ($explode2[0] == 'start_date') {
-                        $result[$key][$explode2[0]] = date_create_from_format("Ymd", substr($explode2[1], 0, 8));
-                    } elseif ($explode2[0] == 'end_date') {
-                        $result[$key][$explode2[0]] = date_create_from_format("Ymd", substr($explode2[1], 0, 8));
-                    } elseif ($explode2[0] == 'uuid') {
-                        $result[$key][$explode2[0]] = $explode2[1];
-                    } elseif ($explode2[0] == 'summary') {
-                        $result[$key][$explode2[0]] = $explode2[1];
-                        // Tambahan: deteksi format dengan TZID (contoh: DTSTART;TZID=Asia/Makassar:20251107T150000)
-                    } elseif (preg_match('/DTSTART(;TZID=[^:]+)?:([0-9T]+)/', $value1, $m)) {
-                        $date = substr($m[2], 0, 8);
-                        $result[$key]['start_date'] = preg_match('/^\d{8}$/', $date) ? date('Y-m-d', strtotime($date)) : null;
-                    } elseif (preg_match('/DTEND(;TZID=[^:]+)?:([0-9T]+)/', $value1, $m)) {
-                        $date = substr($m[2], 0, 8);
-                        $result[$key]['end_date'] = preg_match('/^\d{8}$/', $date) ? date('Y-m-d', strtotime($date)) : null;
+                // DESCRIPTION (multi-line juga di-handle, berhenti jika ada baris baru yang mirip PROPERTY:)
+                if (preg_match('/DESCRIPTION:(.*?)(?=\n[A-Z0-9-]+:|\n$)/s', $evtBody, $m)) {
+                    $description = trim(preg_replace('/\n[ \t]/', ' ', $m[1])); // unfold folded lines
+                }
 
-                        // Format lama tetap dipertahankan untuk kompatibilitas
-                    } elseif (str_contains($value1, 'DTSTART')) {
-                        $date = substr($explode2[1] ?? '', 0, 8);
-                        if (preg_match('/^\d{8}$/', $date)) {
-                            $result[$key][$explode2[0]] = date('Y-m-d', strtotime($date));
-                        } else {
-                            $result[$key][$explode2[0]] = null;
-                        }
-                    } elseif (preg_match('/DTEND(;TZID=[^:]+)?:([0-9T]+)/', $value1, $m)) {
-                        $date = substr($m[2], 0, 8);
-                        $result[$key]['end_date'] = preg_match('/^\d{8}$/', $date) ? date('Y-m-d', strtotime($date)) : null;
+                // DTSTART (menangani DTSTART, DTSTART;VALUE=DATE, DTSTART;TZID=..., dan juga yang ada T...Z)
+                if (preg_match('/DTSTART(?:;[^:]*)?:([0-9T]+Z?)/', $evtBody, $m)) {
+                    $raw = $m[1];
+                    $datePart = substr($raw, 0, 8);
+                    if (preg_match('/^\d{8}$/', $datePart)) {
+                        $startDate = date('Y-m-d', strtotime($datePart));
                     }
                 }
+
+                // DTEND (menangani format serupa)
+                if (preg_match('/DTEND(?:;[^:]*)?:([0-9T]+Z?)/', $evtBody, $m)) {
+                    $raw = $m[1];
+                    $datePart = substr($raw, 0, 8);
+                    if (preg_match('/^\d{8}$/', $datePart)) {
+                        $endDate = date('Y-m-d', strtotime($datePart));
+                    }
+                }
+
+                // Beberapa feed (VALUE=DATE) mungkin menyertakan DTEND sebagai satu hari setelah, tapi kita hanya pakai apa yang diberikan.
+
+                // Jika tanggal valid ditemukan, tambahkan ke result
+                $row = [
+                    'uuid' => $uid ?? '',
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                    'description' => $description ?? '',
+                    'summary' => $summary ?? '',
+                    'villa_id' => $id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+
+                $result[] = $row;
             }
-            // Hapus entri yang tidak punya tanggal valid
+
+            // Hapus entry tanpa tanggal valid
             $result = array_filter($result, function ($r) {
                 return !empty($r['start_date']) && !empty($r['end_date']);
             });
+
+            // Pastikan masih ada data
             if (empty($result)) {
                 return redirect()->route('admin.villa.edit', ['id' => $id])
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because no valid events found']);
             }
 
+            // Replace semua entries untuk villa ini
             DB::table('calenders')->where('villa_id', $id)->delete();
-            Calender::insert($result);
+            Calender::insert(array_values($result)); // array_values agar index numeric berurutan
 
-            $villa = Villas::find($id);
-            $villa->update([
-                'link_ical' => $request->ical_link
-            ]);
+            // Update link_ical hanya jika ada
+            if (!empty($request->ical_link)) {
+                $villa = Villas::find($id);
+                if ($villa) {
+                    $villa->update(['link_ical' => $request->ical_link]);
+                }
+            }
 
             return redirect()->route('admin.villa.edit', ['id' => $id])
                 ->with(['notif_status' => '1', 'notif' => 'Import data ical succeed.']);
         } catch (\Exception $e) {
-            throw $e;
+            // Lebih baik log error di production daripada langsung throw
+            \Log::error('ICS import error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return redirect()->route('admin.villa.edit', ['id' => $id])
+                ->with(['notif_status' => '0', 'notif' => 'Import failed due to internal error']);
         }
     }
+
 
     public function kalender($id_villa)
     {
