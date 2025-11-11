@@ -58,12 +58,10 @@ class CalendarController extends Controller
                 'found_events' => count($matches[0])
             ]);
 
-            if (empty($matches[1])) {
+            if (empty($matches[0])) {
                 return redirect()->route('admin.villa.edit', ['id' => $id])
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because no VEVENT found']);
             }
-
-            $result = [];
 
             foreach ($matches[0] as $evtIndex => $evtBody) {
                 $evtBody = trim(preg_replace("/\n[ \t]/", "", $evtBody)); // unfold folded lines & trim
