@@ -29,6 +29,7 @@ class CalendarController extends Controller
             curl_setopt($ch, CURLOPT_URL, $request->ical_link);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0');
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
             $fileContents = curl_exec($ch);
             curl_close($ch);
@@ -43,28 +44,20 @@ class CalendarController extends Controller
         }
 
         try {
-            // Normalisasi semua variasi line ending dan encoding
-            $fileContents = str_replace(["\r\n", "\r"], "\n", $fileContents);
-            if (!mb_check_encoding($fileContents, 'UTF-8')) {
-                $fileContents = mb_convert_encoding($fileContents, 'UTF-8', 'auto');
-            }
+            // Normalisasi line ending dan trim
+            $fileContents = str_replace("\r\n", "\n", $fileContents);
             $fileContents = trim($fileContents);
 
-            // Ambil semua VEVENT secara aman untuk semua jenis line ending
-            preg_match_all('/BEGIN:VEVENT[\s\S]*?END:VEVENT/', $fileContents, $matches);
-
-            \Log::info('ICS preview', [
-                'snippet' => substr($fileContents, 0, 500),
-                'found_events' => count($matches[0])
-            ]);
-
-            if (empty($matches[0])) {
+            // Ambil semua VEVENT secara aman
+            preg_match_all('/BEGIN:VEVENT(.*?)END:VEVENT/s', $fileContents, $matches);
+            if (empty($matches[1])) {
                 return redirect()->route('admin.villa.edit', ['id' => $id])
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because no VEVENT found']);
             }
 
-            foreach ($matches[0] as $evtIndex => $evtBody) {
-                $evtBody = trim(preg_replace("/\n[ \t]/", "", $evtBody)); // unfold folded lines & trim
+            $result = [];
+
+            foreach ($matches[1] as $evtIndex => $evtBody) {
                 // masing-masing event: cari field-field penting
                 $uid = null;
                 $summary = null;
