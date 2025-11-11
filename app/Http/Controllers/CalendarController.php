@@ -44,7 +44,11 @@ class CalendarController extends Controller
 
         try {
             // Normalisasi line ending dan trim
-            $fileContents = str_replace("\r\n", "\n", $fileContents);
+            // Normalisasi line ending dan encoding
+            $fileContents = str_replace(["\r\n", "\r"], "\n", $fileContents);
+            if (!mb_check_encoding($fileContents, 'UTF-8')) {
+                $fileContents = mb_convert_encoding($fileContents, 'UTF-8', 'auto');
+            }
             $fileContents = trim($fileContents);
 
             // Ambil semua VEVENT secara aman
