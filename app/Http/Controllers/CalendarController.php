@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Calender;
 use App\Models\Villas;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class CalendarController extends Controller
 {
@@ -51,12 +50,14 @@ class CalendarController extends Controller
             }
             $fileContents = trim($fileContents);
 
-            // Ambil semua VEVENT secara aman (izinkan spasi di akhir baris)
-            preg_match_all('/BEGIN:VEVENT\s*(.*?)END:VEVENT/s', $fileContents, $matches);
-            Log::info('ICS preview', [
+            // Ambil semua VEVENT secara aman untuk semua jenis line ending
+            preg_match_all('/BEGIN:VEVENT[\s\S]*?END:VEVENT/', $fileContents, $matches);
+
+            \Log::info('ICS preview', [
                 'snippet' => substr($fileContents, 0, 500),
-                'found_events' => count($matches[1])
+                'found_events' => count($matches[0])
             ]);
+
             if (empty($matches[1])) {
                 return redirect()->route('admin.villa.edit', ['id' => $id])
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because no VEVENT found']);
@@ -64,7 +65,8 @@ class CalendarController extends Controller
 
             $result = [];
 
-            foreach ($matches[1] as $evtIndex => $evtBody) {
+            foreach ($matches[0] as $evtIndex => $evtBody) {
+                $evtBody = trim(preg_replace("/\n[ \t]/", "", $evtBody)); // unfold folded lines & trim
                 // masing-masing event: cari field-field penting
                 $uid = null;
                 $summary = null;
