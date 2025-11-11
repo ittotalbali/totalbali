@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Calender;
 use App\Models\Villas;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CalendarController extends Controller
 {
@@ -43,16 +44,19 @@ class CalendarController extends Controller
         }
 
         try {
-            // Normalisasi line ending dan trim
-            // Normalisasi line ending dan encoding
+            // Normalisasi semua variasi line ending dan encoding
             $fileContents = str_replace(["\r\n", "\r"], "\n", $fileContents);
             if (!mb_check_encoding($fileContents, 'UTF-8')) {
                 $fileContents = mb_convert_encoding($fileContents, 'UTF-8', 'auto');
             }
             $fileContents = trim($fileContents);
 
-            // Ambil semua VEVENT secara aman
-            preg_match_all('/BEGIN:VEVENT(.*?)END:VEVENT/s', $fileContents, $matches);
+            // Ambil semua VEVENT secara aman (izinkan spasi di akhir baris)
+            preg_match_all('/BEGIN:VEVENT\s*(.*?)END:VEVENT/s', $fileContents, $matches);
+            Log::info('ICS preview', [
+                'snippet' => substr($fileContents, 0, 500),
+                'found_events' => count($matches[1])
+            ]);
             if (empty($matches[1])) {
                 return redirect()->route('admin.villa.edit', ['id' => $id])
                     ->with(['notif_status' => '0', 'notif' => 'Import failed because no VEVENT found']);
